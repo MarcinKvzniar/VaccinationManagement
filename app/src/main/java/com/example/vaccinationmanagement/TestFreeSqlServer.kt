@@ -37,7 +37,7 @@ object TestFreeSqlServer {
                 "Rossignol")
 
             // Deleting a record
-            deleteRecord(conn, "John Deere")
+//            deleteRecord(conn, "John Deere")
 
             // Retrieving data
             retrieveData(conn, "USA")
@@ -57,7 +57,7 @@ object TestFreeSqlServer {
         }
     }
 
-    private fun addNewRecord(conn: Connection,
+    fun addNewRecord(conn: Connection,
                              name: String,
                              country: String,
                              date_of_birth: String,
@@ -98,7 +98,7 @@ object TestFreeSqlServer {
         }
     }
 
-    private fun retrieveData(conn: Connection, selectedCountry:
+    fun retrieveData(conn: Connection, selectedCountry:
     String) {
         try {
             val selectQuery = "SELECT * FROM alpine_skiers WHERE country = ?"

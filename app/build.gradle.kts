@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.example.vaccinationmanagement"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.vaccinationmanagement"
         minSdk = 24
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -36,10 +36,6 @@ android {
 }
 
 dependencies {
-    mavenCentral()
-    maven {
-        url = uri("https://repo1.maven.org/maven2")
-    }
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
@@ -48,7 +44,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation ("mysql:mysql-connectorjava:8.0.33")
+    implementation ("mysql:mysql-connector-java:8.0.33")
 }
 
 
