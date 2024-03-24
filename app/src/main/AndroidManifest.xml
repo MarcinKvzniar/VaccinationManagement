@@ -13,6 +13,15 @@
         android:theme="@style/Theme.VaccinationManagement"
         tools:targetApi="34">
         <activity
+            android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".authentication.RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".authentication.LoginActivity"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

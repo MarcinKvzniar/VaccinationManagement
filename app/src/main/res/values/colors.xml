@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorPrimaryDark">#3262C4</color>
+    <color name="red">#C11515</color>
+    <color name="darkBlue">#23395d</color>
+
+    <color name="toastBackgroundError">#FF0000</color>
+    <color name="toastBackgroundSuccessful">#00FF00</color>
 </resources>
