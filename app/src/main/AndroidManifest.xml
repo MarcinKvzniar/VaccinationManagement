@@ -13,16 +13,22 @@
         android:theme="@style/Theme.VaccinationManagement"
         tools:targetApi="34">
         <activity
+            android:name=".history.HistoryAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".history.HistoryActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".tests.MainActivity"
             android:exported="false" />
         <activity
             android:name=".authentication.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".authentication.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -86,7 +86,9 @@ class LoginActivity : AppCompatActivity() {
             val email = inputEmailLog.text.toString().trim()
             val password = inputPasswordLog.text.toString().trim()
 
-            FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
+            FirebaseAuth
+                .getInstance()
+                .signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         showBasicToast("Logged in successfully.")

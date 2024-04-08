@@ -1,7 +1,8 @@
-package com.example.vaccinationmanagement
+package com.example.vaccinationmanagement.tests
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.vaccinationmanagement.R
 import java.sql.DriverManager
 
 class MainActivity : AppCompatActivity() {
@@ -20,15 +21,16 @@ class MainActivity : AppCompatActivity() {
         val connectionUrl = urlSB.toString()
         val conn = DriverManager.getConnection(connectionUrl)
 
-        testDB.addNewRecord(
+        TestFreeSqlServer.addNewRecord(
             conn,
             "John",
             "USA",
             "1995-10-10",
             "Rossignol",
-            "Rossignol")
+            "Rossignol"
+        )
 
-        testDB.retrieveData(conn, "USA")
+        TestFreeSqlServer.retrieveData(conn, "USA")
 
     }
 

@@ -1,4 +1,4 @@
-package com.example.vaccinationmanagement
+package com.example.vaccinationmanagement.tests
 
 
 import java.sql.Connection

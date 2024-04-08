@@ -55,7 +55,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun validateRegisterDetails(): Boolean {
-        val specialChars = "!@#$%^&*-_+(){}/[]|"
+        val specialChars = "!@#$%^&*-_+(){}/[]|".toCharArray()
 
         return when {
             TextUtils.isEmpty(inputNameReg.text.toString().trim { it <= ' ' }) -> {
@@ -95,7 +95,6 @@ class RegisterActivity : AppCompatActivity() {
     private fun registerUser() {
         val login = inputEmailReg.text.toString().trim()
         val password = inputPasswordReg.text.toString().trim()
-        val name = inputNameReg.text.toString().trim()
 
         FirebaseAuth
             .getInstance()

@@ -5,6 +5,59 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_auth_activities"
     tools:context=".HomeActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:gravity="center"
+        android:text="some title here"
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.055" />
+
+    <Button
+        android:id="@+id/btnSchedule"
+        android:layout_width="200dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="SCHEDULE"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Button
+        android:id="@+id/btnHistory"
+        android:layout_width="200dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="VACCINATION CALENDAR"
+        android:textSize="20dp"
+        app:layout_constraintEnd_toEndOf="@+id/btnSchedule"
+        app:layout_constraintStart_toStartOf="@+id/btnSchedule"
+        app:layout_constraintTop_toBottomOf="@+id/btnSchedule" />
+
+    <Button
+        android:id="@+id/btnLogOut"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log out"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnHistory" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
