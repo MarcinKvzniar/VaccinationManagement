@@ -11,6 +11,7 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var btnSchedule : Button
     private lateinit var btnHistory: Button
+    private lateinit var btnAccount : Button
     private lateinit var btnLogOut : Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,11 +20,16 @@ class HomeActivity : AppCompatActivity() {
 
         initViews()
 
+        btnAccount.setOnClickListener {
+            startActivity(
+                Intent(this@HomeActivity,
+                AccountActivity::class.java))
+        }
+
         btnSchedule.setOnClickListener {
             startActivity(
                 Intent(this@HomeActivity,
-                ScheduleActivity::class.java)
-            )
+                ScheduleActivity::class.java))
         }
 
         btnHistory.setOnClickListener {
@@ -33,13 +39,15 @@ class HomeActivity : AppCompatActivity() {
         }
 
         btnLogOut.setOnClickListener {
-            startActivity(Intent(this@HomeActivity,
+            startActivity(
+                Intent(this@HomeActivity,
                 LoginActivity::class.java))
         }
 
     }
 
     private fun initViews() {
+        btnAccount = findViewById(R.id.btnAccount)
         btnSchedule = findViewById(R.id.btnSchedule)
         btnHistory = findViewById(R.id.btnHistory)
         btnLogOut = findViewById(R.id.btnLogOut)

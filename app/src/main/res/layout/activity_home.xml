@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_auth_activities"
@@ -25,16 +25,34 @@
         app:layout_constraintVertical_bias="0.055" />
 
     <Button
+        android:id="@+id/btnAccount"
+        android:layout_width="200dp"
+        android:layout_height="75dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:background="@drawable/bg_input"
+        android:drawableLeft="@drawable/ic_person"
+        android:text="ACCOUNT"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:ignore="HardcodedText,RtlHardcoded" />
+
+    <Button
         android:id="@+id/btnSchedule"
         android:layout_width="200dp"
         android:layout_height="75dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
+        android:background="@drawable/bg_input"
+        android:drawableLeft="@drawable/ic_history"
         android:text="SCHEDULE"
-        android:textSize="20dp"
-        app:layout_constraintEnd_toEndOf="@+id/textView"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="@+id/btnAccount"
+        app:layout_constraintStart_toStartOf="@+id/btnAccount"
+        app:layout_constraintTop_toBottomOf="@+id/btnAccount"
+        tools:ignore="HardcodedText,RtlHardcoded" />
 
     <Button
         android:id="@+id/btnHistory"
@@ -42,22 +60,28 @@
         android:layout_height="75dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
+        android:background="@drawable/bg_input"
+        android:drawableLeft="@drawable/ic_calendar"
         android:text="VACCINATION CALENDAR"
-        android:textSize="20dp"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/btnSchedule"
         app:layout_constraintStart_toStartOf="@+id/btnSchedule"
-        app:layout_constraintTop_toBottomOf="@+id/btnSchedule" />
+        app:layout_constraintTop_toBottomOf="@+id/btnSchedule"
+        tools:ignore="HardcodedText,RtlHardcoded" />
 
     <Button
         android:id="@+id/btnLogOut"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_input"
+        android:drawableLeft="@drawable/ic_logout"
         android:text="Log out"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnHistory" />
+        app:layout_constraintTop_toBottomOf="@+id/btnHistory"
+        tools:ignore="HardcodedText,RtlHardcoded" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
