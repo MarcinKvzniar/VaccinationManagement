@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_auth_activities"
-    tools:context=".history.HistoryActivity">
+    tools:context=".activities.history.HistoryActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/historyRecyclerView"

@@ -1,4 +1,4 @@
-package com.example.vaccinationmanagement.history
+package com.example.vaccinationmanagement.activities.history
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,16 +6,16 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.vaccinationmanagement.HomeActivity
+import com.example.vaccinationmanagement.activities.HomeActivity
 import com.example.vaccinationmanagement.R
-import com.example.vaccinationmanagement.data.VaccinationData
+import com.example.vaccinationmanagement.appointments.Appointments
 
 class HistoryActivity : AppCompatActivity() {
 
     private lateinit var historyAdapter: HistoryAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var btnBackHome: Button
-    private var vaccinationList: MutableList<VaccinationData> = mutableListOf()
+    private var vaccinationList: MutableList<Appointments> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

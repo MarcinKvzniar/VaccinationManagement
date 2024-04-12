@@ -1,11 +1,12 @@
-package com.example.vaccinationmanagement
+package com.example.vaccinationmanagement.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import com.example.vaccinationmanagement.authentication.LoginActivity
-import com.example.vaccinationmanagement.history.HistoryActivity
+import com.example.vaccinationmanagement.R
+import com.example.vaccinationmanagement.activities.authentication.LoginActivity
+import com.example.vaccinationmanagement.activities.history.HistoryActivity
 
 class HomeActivity : AppCompatActivity() {
 

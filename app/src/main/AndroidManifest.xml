@@ -13,25 +13,25 @@
         android:theme="@style/Theme.VaccinationManagement"
         tools:targetApi="34">
         <activity
-            android:name=".AccountActivity"
+            android:name=".activities.AccountActivity"
             android:exported="false" />
         <activity
-            android:name=".history.HistoryAdapter"
+            android:name=".activities.history.HistoryAdapter"
             android:exported="false" />
         <activity
-            android:name=".history.HistoryActivity"
+            android:name=".activities.history.HistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".activities.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".tests.MainActivity"
+            android:name=".databaseConfiguration.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".authentication.RegisterActivity"
+            android:name=".activities.authentication.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".authentication.LoginActivity"
+            android:name=".activities.authentication.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

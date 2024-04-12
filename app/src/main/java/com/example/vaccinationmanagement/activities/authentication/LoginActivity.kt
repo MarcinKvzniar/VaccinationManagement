@@ -1,4 +1,4 @@
-package com.example.vaccinationmanagement.authentication
+package com.example.vaccinationmanagement.activities.authentication
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,7 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.vaccinationmanagement.HomeActivity
+import com.example.vaccinationmanagement.activities.HomeActivity
 import com.example.vaccinationmanagement.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException

@@ -1,4 +1,4 @@
-package com.example.vaccinationmanagement.authentication
+package com.example.vaccinationmanagement.activities.authentication
 
 import android.content.Intent
 import android.os.Bundle

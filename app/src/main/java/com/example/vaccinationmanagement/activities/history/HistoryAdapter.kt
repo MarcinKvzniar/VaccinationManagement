@@ -1,4 +1,4 @@
-package com.example.vaccinationmanagement.history
+package com.example.vaccinationmanagement.activities.history
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vaccinationmanagement.R
-import com.example.vaccinationmanagement.data.VaccinationData
+import com.example.vaccinationmanagement.appointments.Appointments
 
-class HistoryAdapter(private val vaccinationHistory: List<VaccinationData>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+class HistoryAdapter(private val vaccinationHistory: List<Appointments>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val doctorId: TextView = itemView.findViewById(R.id.tvDoctorId)
