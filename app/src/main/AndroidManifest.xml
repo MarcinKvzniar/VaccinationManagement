@@ -25,9 +25,6 @@
             android:name=".activities.HomeActivity"
             android:exported="false" />
         <activity
-            android:name=".databaseConfiguration.MainActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.authentication.RegisterActivity"
             android:exported="false" />
         <activity

@@ -4,9 +4,9 @@ import java.sql.Time
 import java.sql.Date
 
 data class Appointments(
-    var id: Long,
+    var id: Int,
     var pesel: String,
-    var doctorId: Long,
+    var doctorId: Int,
     var date: Date,
     var time: Time,
     var address: String,

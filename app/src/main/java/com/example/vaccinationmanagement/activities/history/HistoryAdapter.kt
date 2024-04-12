@@ -28,8 +28,8 @@ class HistoryAdapter(private val vaccinationHistory: List<Appointments>) : Recyc
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val vaccination = vaccinationHistory[position]
         holder.doctorId.text = vaccination.doctorId.toString()
-        holder.textDate.text = vaccination.date
-        holder.textTime.text = vaccination.time
+        holder.textDate.text = vaccination.date.toString()
+        holder.textTime.text = vaccination.time.toString()
         holder.textAddress.text = vaccination.address
         holder.textVaccineName.text = vaccination.vaccineName
         holder.textDose.text = vaccination.dose.toString()

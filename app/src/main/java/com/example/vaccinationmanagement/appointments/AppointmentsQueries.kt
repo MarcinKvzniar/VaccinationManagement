@@ -1,14 +1,12 @@
-package com.example.vaccinationmanagement.databaseConfiguration
+package com.example.vaccinationmanagement.appointments
 
-import com.example.vaccinationmanagement.appointments.Appointments
-import com.example.vaccinationmanagement.appointments.AppointmentsDAO
 import java.sql.Connection
 import java.sql.ResultSet
 
-class DBqueries(private val connection: Connection) : AppointmentsDAO {
+class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO {
 
     // Retrieves an appointment by vaccineName from the database
-    override fun getAppointmentByVaccine(vaccineName: String): Appointments? {
+    override fun getAppointmentByVaccineName(vaccineName: String): Appointments? {
         val query = "{CALL getAppointment(?)}"
         val callableStatement = connection.prepareCall(query)
         callableStatement.setString(7, vaccineName)
@@ -26,11 +24,11 @@ class DBqueries(private val connection: Connection) : AppointmentsDAO {
         val query = "{CALL getAppointments()}"
         val callableStatement = connection.prepareCall(query)
         val resultSet = callableStatement.executeQuery()
-        val skiers = mutableSetOf<Appointments?>()
+        val appointments = mutableSetOf<Appointments?>()
         while (resultSet.next()) {
-            skiers.add(mapResultSetToAppointment(resultSet))
+            appointments.add(mapResultSetToAppointment(resultSet))
         }
-        return if (skiers.isEmpty()) null else skiers
+        return if (appointments.isEmpty()) null else appointments
     }
 
     // Inserts a new appointment into the database
@@ -38,9 +36,9 @@ class DBqueries(private val connection: Connection) : AppointmentsDAO {
         // Prepare the call to the MySQL stored procedure
         val call = "{CALL insertAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
         val statement = connection.prepareCall(call)
-        statement.setLong(1, appointment.id)
+        statement.setInt(1, appointment.id)
         statement.setString(2, appointment.pesel)
-        statement.setLong(3, appointment.doctorId)
+        statement.setInt(3, appointment.doctorId)
         statement.setDate(4, appointment.date)
         statement.setTime(5, appointment.time)
         statement.setString(6, appointment.address)
@@ -55,9 +53,9 @@ class DBqueries(private val connection: Connection) : AppointmentsDAO {
     override fun updateAppointment(vaccineName: String, appointment: Appointments): Boolean {
         val query = "{CALL updateSkier(?, ?, ?, ?, ?, ?, ?, ?)}"
         val callableStatement = connection.prepareCall(query)
-        callableStatement.setLong(1, appointment.id)
+        callableStatement.setInt(1, appointment.id)
         callableStatement.setString(2, appointment.pesel)
-        callableStatement.setLong(3, appointment.doctorId)
+        callableStatement.setInt(3, appointment.doctorId)
         callableStatement.setDate(4, appointment.date)
         callableStatement.setTime(5, appointment.time)
         callableStatement.setString(6, appointment.address)
@@ -79,13 +77,13 @@ class DBqueries(private val connection: Connection) : AppointmentsDAO {
     // Maps a ResultSet row to an Appointment object
     private fun mapResultSetToAppointment(resultSet: ResultSet): Appointments? {
         return Appointments(
-            id = resultSet.getLong("id"),
+            id = resultSet.getInt("id"),
             pesel = resultSet.getString("pesel"),
-            doctorId = resultSet.getLong("doctorId"),
+            doctorId = resultSet.getInt("doctor_id"),
             date = resultSet.getDate("date"),
             time = resultSet.getTime("time"),
             address = resultSet.getString("address"),
-            vaccineName = resultSet.getString("vaccineName"),
+            vaccineName = resultSet.getString("vaccination_name"),
             dose = resultSet.getInt("dose")
         )
     }
