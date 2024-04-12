@@ -1,25 +1,22 @@
 package com.example.vaccinationmanagement.history
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.Recycler
 import com.example.vaccinationmanagement.R
+import com.example.vaccinationmanagement.data.VaccinationData
 
-class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+class HistoryAdapter(private val vaccinationHistory: List<VaccinationData>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-//        val textVaccineName: TextView = itemView.findViewById(R.id.textVaccineName)
-//        val textDate: TextView = itemView.findViewById(R.id.textDate)
-//        val textTime: TextView = itemView.findViewById(R.id.textTime)
-//        val dose: TextView = itemView.findViewById(R.id.dose)
+        val doctorId: TextView = itemView.findViewById(R.id.tvDoctorId)
+        val textVaccineName: TextView = itemView.findViewById(R.id.tvVaccineNameItem)
+        val textDate: TextView = itemView.findViewById(R.id.tvDateItem)
+        val textTime: TextView = itemView.findViewById(R.id.tvTimeItem)
+        val textAddress: TextView = itemView.findViewById(R.id.tvAddressItem)
+        val textDose: TextView = itemView.findViewById(R.id.tvCurrentDose)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -29,15 +26,16 @@ class HistoryAdapter : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-//        val vaccination = vaccinationHistory[position]
-//        holder.textVaccineName.text = vaccination.vaccineName
-//        holder.textDate.text = vaccination.date
-//        holder.textTime.text = vaccination.time
-//        holder.dose.text = vaccination.dose
+        val vaccination = vaccinationHistory[position]
+        holder.doctorId.text = vaccination.doctorId.toString()
+        holder.textDate.text = vaccination.date
+        holder.textTime.text = vaccination.time
+        holder.textAddress.text = vaccination.address
+        holder.textVaccineName.text = vaccination.vaccineName
+        holder.textDose.text = vaccination.dose.toString()
     }
 
     override fun getItemCount(): Int {
-//        return vaccinationHistory.size
-        return 0
+        return vaccinationHistory.size
     }
 }

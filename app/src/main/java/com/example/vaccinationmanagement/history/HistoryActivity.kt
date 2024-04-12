@@ -8,21 +8,22 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vaccinationmanagement.HomeActivity
 import com.example.vaccinationmanagement.R
+import com.example.vaccinationmanagement.data.VaccinationData
 
 class HistoryActivity : AppCompatActivity() {
 
     private lateinit var historyAdapter: HistoryAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var btnBackHome: Button
-//    private var vaccinationList: MutableList<> = mutableListOf()
+    private var vaccinationList: MutableList<VaccinationData> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
-//        recyclerView = findViewById(R.id.recyclerView)
+        recyclerView = findViewById(R.id.historyRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
-        historyAdapter = HistoryAdapter() //add vaccination data as parameter
+        historyAdapter = HistoryAdapter(vaccinationList)
         recyclerView.adapter = historyAdapter
 
         btnBackHome.setOnClickListener {

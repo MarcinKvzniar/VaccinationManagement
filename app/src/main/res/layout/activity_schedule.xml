@@ -2,9 +2,101 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_auth_activities"
     tools:context=".ScheduleActivity">
 
+    <EditText
+        android:id="@+id/etVaccineName"
+        android:layout_width="350dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:hint="Vaccine Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.055"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnDatePicker"
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="Set Date"
+        app:layout_constraintEnd_toEndOf="@+id/etVaccineName"
+        app:layout_constraintStart_toStartOf="@+id/etVaccineName"
+        app:layout_constraintTop_toBottomOf="@+id/etVaccineName"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnTimePicker"
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Set Time"
+        app:layout_constraintEnd_toEndOf="@+id/btnDatePicker"
+        app:layout_constraintStart_toStartOf="@+id/btnDatePicker"
+        app:layout_constraintTop_toBottomOf="@+id/btnDatePicker"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnEnterAddress"
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Enter Address"
+        app:layout_constraintEnd_toEndOf="@+id/btnTimePicker"
+        app:layout_constraintStart_toStartOf="@+id/btnTimePicker"
+        app:layout_constraintTop_toBottomOf="@+id/btnTimePicker"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnGetTheDoctor"
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:text="Get Available Doctors"
+        app:layout_constraintEnd_toEndOf="@+id/btnEnterAddress"
+        app:layout_constraintStart_toStartOf="@+id/btnEnterAddress"
+        app:layout_constraintTop_toBottomOf="@+id/btnEnterAddress"
+        tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnScheduleAppointment"
+        android:layout_width="379dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="108dp"
+        android:layout_marginTop="64dp"
+        android:gravity="center"
+        android:text="Schedule Appointment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btnGetTheDoctor"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/btnGetTheDoctor"
+        app:layout_constraintTop_toBottomOf="@+id/btnGetTheDoctor"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="SCHEDULE VACCINE"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
