@@ -5,11 +5,11 @@ import java.sql.ResultSet
 
 class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO {
 
-    // Retrieves an appointment by vaccineName from the database
-    override fun getAppointmentByVaccineName(vaccineName: String): Appointments? {
+    // Retrieves an appointment by id from the database
+    override fun getAppointmentById(id: Int): Appointments? {
         val query = "{CALL getAppointment(?)}"
         val callableStatement = connection.prepareCall(query)
-        callableStatement.setString(7, vaccineName)
+        callableStatement.setInt(1, id)
         val resultSet = callableStatement.executeQuery()
 
         return if (resultSet.next()) {
@@ -46,12 +46,13 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
         statement.setInt(8, appointment.dose)
         val result = !statement.execute()
         statement.close()
+
         return result
     }
 
     // Updates an existing appointment in the database
-    override fun updateAppointment(vaccineName: String, appointment: Appointments): Boolean {
-        val query = "{CALL updateSkier(?, ?, ?, ?, ?, ?, ?, ?)}"
+    override fun updateAppointment(id: Int, appointment: Appointments): Boolean {
+        val query = "{CALL updateAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
         val callableStatement = connection.prepareCall(query)
         callableStatement.setInt(1, appointment.id)
         callableStatement.setString(2, appointment.pesel)
@@ -66,16 +67,17 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
     }
 
     // Deletes an appointment from the database
-    override fun deleteAppointment(vaccineName: String): Boolean {
+    override fun deleteAppointment(id: Int): Boolean {
         val query = "{CALL deleteAppointment(?)}"
         val callableStatement = connection.prepareCall(query)
-        callableStatement.setString(7, vaccineName)
+        callableStatement.setInt(1, id)
+
         return callableStatement.executeUpdate() > 0
     }
 
 
     // Maps a ResultSet row to an Appointment object
-    private fun mapResultSetToAppointment(resultSet: ResultSet): Appointments? {
+    private fun mapResultSetToAppointment(resultSet: ResultSet): Appointments {
         return Appointments(
             id = resultSet.getInt("id"),
             pesel = resultSet.getString("pesel"),

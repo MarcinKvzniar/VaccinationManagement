@@ -1,6 +1,5 @@
 package com.example.vaccinationmanagement.dbConfig
 
-
 import com.example.vaccinationmanagement.appointments.Appointments
 import com.example.vaccinationmanagement.appointments.AppointmentsQueries
 import com.example.vaccinationmanagement.doctors.Doctors
@@ -13,49 +12,42 @@ import java.sql.Time
 fun main() {
     try {
         // Getting connection using DBConnection class
-        val connection = DBconnection.getConnection() // Getting a database connection using the DBConnection class
+        val connection = DBconnection.getConnection()
         val appointmentQuery = AppointmentsQueries(connection)
         val patientQuery = PatientsQueries(connection)
         val doctorQuery = DoctorsQueries(connection)
 
         // test insert a patient
-        println("Testing insertPatient():") // Testing the insertPatient() method:
-        val newPatient = Patients("02949285472", "John", "Doe", Date.valueOf("1995-10-10"))
+        println("Testing insertPatient():")
+        val newPatient = Patients("12345678901", "Daniel", "Dave", Date.valueOf("2001-11-02"))
         println("Insertion successful: ${patientQuery.insertPatient(newPatient)}")
 
         println("Testing getAllPatients():")
         println(patientQuery.getAllPatients())
 
-        println("Testing insertDoctor():") // Testing the insertDoctor() method:
-        val newDoctor = Doctors(1, "Dr. John Doe", "General Practitioner")
+        println("Testing insertDoctor():")
+        val newDoctor = Doctors(2, "Michael", "Jordan")
         println("Insertion successful: ${doctorQuery.insertDoctor(newDoctor)}")
 
         println("Testing getAllDoctors():")
-        println(patientQuery.getAllDoctors())
+        println(doctorQuery.getAllDoctors())
 
 
         // Testing methods
-        println("Testing insertAppointment():") // Testing the insertAppointment() method:
-        val newAppointment = Appointments(1, "11111111111", 1, Date.valueOf("2024-04-12"), Time.valueOf("10:00:00"), "123 Main St", "Pfizer", 1)
+        println("Testing insertAppointment():")
+        val newAppointment = Appointments(2, "12345678901", 2, Date.valueOf("2024-04-12"), Time.valueOf("12:30:00"), "Street Street", "SomeVaccine", 1)
         println("Insertion successful: ${appointmentQuery.insertAppointment(newAppointment)}")
 
         println("Testing getAllAppointments():")
         println(appointmentQuery.getAllAppointments())
 
-//        println("Testing insertAppointment():") // Testing the insertAppointment() method:
 
-//        // Creating a new Appointments object and printing the success or failure of inserting a new record
-//        val newAppointment2 = Appointments(2, "8428928984294", 2, Date.valueOf("2021-10-10"), Time.valueOf("10:00:00"), "123 Main St", "Moderna", 1)
-//        println("Insertion successful:${dbQueries.insertAppointment(newAppointment2)}")
-//
-//        println("Testing updateAppointment():")
-//
-//        // Creating an updated Appointments object, calling the updateAppointment method, and printing the success or failure
-//        val updatedAppointments = Appointments(1, "8742874827822", 1, Date.valueOf("2021-10-10"), Time.valueOf("10:00:00"), "123 Main St", "Pfizer", 2)
-//        println("Update successful: ${dbQueries.updateAppointment("Pfizer", updatedAppointments)}")
-//
-//        println("Testing deleteSkier():") // Testing the deleteAppointment() method:
-//        println("Deletion successful:${dbQueries.deleteAppointment("Pfizer")}") // Calling the deleteAppointment method and printing the success or failure
+        println("Testing updateAppointment():")
+        val updatedAppointments = Appointments(1, "02949285472", 1, Date.valueOf("2021-10-10"), Time.valueOf("08:45:00"), "321 Middle St", "Pfizer", 2)
+        println("Update successful: ${appointmentQuery.updateAppointment(1, updatedAppointments)}")
+
+        println("Testing deleteSkier():")
+        println("Deletion successful:${appointmentQuery.deleteAppointment(1)}")
 
         // Closing connection
         connection.close()

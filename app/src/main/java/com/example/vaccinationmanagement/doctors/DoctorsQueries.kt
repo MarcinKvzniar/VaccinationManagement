@@ -1,12 +1,20 @@
 package com.example.vaccinationmanagement.doctors
 
-import com.example.vaccinationmanagement.patients.Patients
 import java.sql.Connection
 import java.sql.ResultSet
 
 class DoctorsQueries(private val connection: Connection) : DoctorsDAO {
     override fun getDoctorById(id: Int): Doctors? {
-        TODO("Not yet implemented")
+        val query = "{CALL getDoctor(?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setInt(1, id)
+        val resultSet = callableStatement.executeQuery()
+
+        return if (resultSet.next()) {
+            mapResultSetToDoctor(resultSet)
+        } else {
+            null
+        }
     }
 
     override fun getAllDoctors(): Set<Doctors?>? {
@@ -21,14 +29,39 @@ class DoctorsQueries(private val connection: Connection) : DoctorsDAO {
     }
 
     override fun insertDoctor(doctor: Doctors): Boolean {
-        TODO("Not yet implemented")
+        val call = "{CALL insertDoctor(?, ?, ?)}"
+        val statement = connection.prepareCall(call)
+        statement.setInt(1, doctor.id)
+        statement.setString(2, doctor.name)
+        statement.setString(3, doctor.surname)
+        val result = !statement.execute()
+        statement.close()
+        return result
     }
 
     override fun updateDoctor(id: Int, doctor: Doctors): Boolean {
-        TODO("Not yet implemented")
+        val query = "{CALL updateDoctor(?, ?, ?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setInt(1, doctor.id)
+        callableStatement.setString(2, doctor.name)
+        callableStatement.setString(3, doctor.surname)
+
+        return callableStatement.executeUpdate() > 0
     }
 
     override fun deleteDoctor(id: Int): Boolean {
-        TODO("Not yet implemented")
+        val query = "{CALL deleteDoctor(?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setInt(1, id)
+
+        return callableStatement.executeUpdate() > 0
+    }
+
+    private fun mapResultSetToDoctor(resultSet: ResultSet): Doctors {
+        return Doctors(
+            id = resultSet.getInt("id"),
+            name = resultSet.getString("name"),
+            surname = resultSet.getString("surname")
+        )
     }
 }

@@ -1,12 +1,20 @@
 package com.example.vaccinationmanagement.patients
 
-import com.example.vaccinationmanagement.appointments.Appointments
 import java.sql.Connection
 import java.sql.ResultSet
 
 class PatientsQueries(private val connection : Connection) : PatientsDAO {
     override fun getPatientByPesel(pesel: String): Patients? {
-        TODO("Not yet implemented")
+        val query = "{CALL getPatient(?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setString(1, pesel)
+        val resultSet = callableStatement.executeQuery()
+
+        return if (resultSet.next()) {
+            mapResultSetToPatient(resultSet)
+        } else {
+            null
+        }
     }
 
     override fun getAllPatients(): Set<Patients?>? {
@@ -33,14 +41,25 @@ class PatientsQueries(private val connection : Connection) : PatientsDAO {
     }
 
     override fun updatePatient(pesel: String, patient: Patients): Boolean {
-        TODO("Not yet implemented")
+        val query = "{CALL updatePatient(?, ?, ?, ?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setString(1, patient.pesel)
+        callableStatement.setString(2, patient.name)
+        callableStatement.setString(3, patient.surname)
+        callableStatement.setDate(4, patient.dateOfBirth)
+
+        return callableStatement.executeUpdate() > 0
     }
 
     override fun deletePatient(pesel: String): Boolean {
-        TODO("Not yet implemented")
+        val query = "{CALL deletePatient(?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setString(1, pesel)
+
+        return callableStatement.executeUpdate() > 0
     }
 
-    private fun mapResultSetToPatient(resultSet: ResultSet): Patients? {
+    private fun mapResultSetToPatient(resultSet: ResultSet): Patients {
         return Patients(
             pesel = resultSet.getString("pesel"),
             name = resultSet.getString("name"),

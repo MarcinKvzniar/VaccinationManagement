@@ -5,6 +5,10 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.vaccinationmanagement.R
+import com.example.vaccinationmanagement.dbConfig.DBconnection
+import com.example.vaccinationmanagement.patients.Patients
+import com.example.vaccinationmanagement.patients.PatientsQueries
+import java.sql.Date
 
 class AccountActivity : AppCompatActivity() {
 
@@ -24,7 +28,7 @@ class AccountActivity : AppCompatActivity() {
             val pesel = etPesel.text.toString()
             val name = etName.text.toString()
             val surname = etSurname.text.toString()
-            val dateOfBirth = etDateOfBirth.text.toString()
+            val dateOfBirth = Date.valueOf(etDateOfBirth.text.toString())
 
             saveDetails(pesel, name, surname, dateOfBirth)
         }
@@ -38,7 +42,18 @@ class AccountActivity : AppCompatActivity() {
         btnSave = findViewById(R.id.btn_save)
     }
 
-    private fun saveDetails(pesel: String, name: String, surname: String, dateOfBirth: String) {
-        // Save details to the mysql database
+    private fun saveDetails(pesel: String, name: String, surname: String, dateOfBirth: Date) {
+        // TODO some security checks, anyone can edit someone else account
+        // TODO maybe add ROLE to the database ('USER', 'DOCTOR', 'ADMIN') and check if user is 'USER'
+        val connection = DBconnection.getConnection()
+        val patientQuery = PatientsQueries(connection)
+
+        val patient = Patients(pesel, name, surname, dateOfBirth)
+
+        if (patientQuery.getPatientByPesel(pesel) != null) {
+            patientQuery.updatePatient(pesel, patient)
+        } else {
+            patientQuery.insertPatient(patient)
+        }
     }
 }
