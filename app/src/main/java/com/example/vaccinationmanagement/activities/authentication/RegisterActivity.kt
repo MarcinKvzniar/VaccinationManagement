@@ -1,5 +1,6 @@
 package com.example.vaccinationmanagement.activities.authentication
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
@@ -9,8 +10,12 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.vaccinationmanagement.R
+import com.example.vaccinationmanagement.dbConfig.DBconnection
+import com.example.vaccinationmanagement.patients.Patients
+import com.example.vaccinationmanagement.patients.PatientsQueries
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import java.sql.Date
+import java.text.SimpleDateFormat
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -18,6 +23,9 @@ class RegisterActivity : AppCompatActivity() {
     private lateinit var btnGoToLogin: TextView
 
     private lateinit var inputNameReg: EditText
+    private lateinit var inputSurnameReg: EditText
+    private lateinit var inputDateOfBirthReg: EditText
+    private lateinit var inputPeselReg: EditText
     private lateinit var inputEmailReg: EditText
     private lateinit var inputPasswordReg: EditText
     private lateinit var inputRepPasswordReg: EditText
@@ -47,6 +55,9 @@ class RegisterActivity : AppCompatActivity() {
         btnGoToLogin = findViewById(R.id.btnGoToLogin)
 
         inputNameReg = findViewById(R.id.inputName)
+        inputSurnameReg = findViewById(R.id.inputSurnameReg)
+        inputDateOfBirthReg = findViewById(R.id.inputDateOfBirthReg)
+        inputPeselReg = findViewById(R.id.inputPesel)
         inputEmailReg = findViewById(R.id.inputEmailReg)
         inputPasswordReg = findViewById(R.id.inputPasswordReg)
         inputRepPasswordReg = findViewById(R.id.inputRepeatPasswordReg)
@@ -60,6 +71,22 @@ class RegisterActivity : AppCompatActivity() {
         return when {
             TextUtils.isEmpty(inputNameReg.text.toString().trim { it <= ' ' }) -> {
                 showBasicToast(resources.getString(R.string.err_msg_enter_name))
+                false
+            }
+            TextUtils.isEmpty(inputSurnameReg.text.toString().trim { it <= ' ' }) -> {
+                showBasicToast(resources.getString(R.string.err_msg_enter_surname))
+                false
+            }
+            TextUtils.isEmpty(inputDateOfBirthReg.text.toString().trim { it <= ' ' }) -> {
+                showBasicToast(resources.getString(R.string.err_msg_enter_date_of_birth))
+                false
+            }
+            !isDateValid(inputDateOfBirthReg.text.toString().trim { it <= ' ' }) -> {
+                showBasicToast(resources.getString(R.string.err_msg_date_of_birth_format))
+                false
+            }
+            TextUtils.isEmpty(inputPeselReg.text.toString().trim { it <= ' ' }) -> {
+                showBasicToast(resources.getString(R.string.err_msg_enter_pesel))
                 false
             }
             TextUtils.isEmpty(inputEmailReg.text.toString().trim { it <= ' ' }) -> {
@@ -94,6 +121,10 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun registerUser() {
         val login = inputEmailReg.text.toString().trim()
+        val name = inputNameReg.text.toString().trim()
+        val surname = inputSurnameReg.text.toString().trim()
+        val dateOfBirth = inputDateOfBirthReg.text.toString().trim()
+        val pesel = inputPeselReg.text.toString().trim()
         val password = inputPasswordReg.text.toString().trim()
 
         FirebaseAuth
@@ -101,14 +132,17 @@ class RegisterActivity : AppCompatActivity() {
             .createUserWithEmailAndPassword(login, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val firebaseUser: FirebaseUser = task.result?.user!!
-                    showBasicToast("You are registered successfully." +
-                            " Your user id is ${firebaseUser.uid}")
+                    try {
+                        val connection = DBconnection.getConnection()
+                        val patientQuery = PatientsQueries(connection)
+                        val newUser = Patients(pesel, name, surname, Date.valueOf(dateOfBirth))
 
-                    /**
-                     * TODO implement registering user with firestore and providing the data
-                     * TODO to mysql database
-                     */
+                        patientQuery.insertPatient(newUser)
+
+                        connection.close()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
 
                     startActivity(
                         Intent(this@RegisterActivity,
@@ -116,7 +150,7 @@ class RegisterActivity : AppCompatActivity() {
                     )
                     finish()
                 } else {
-                    showBasicToast(task.exception?.message.toString())
+                    userRegistrationSuccess()
                 }
             }
     }
@@ -125,10 +159,20 @@ class RegisterActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    fun userRegistrationSuccess() {
+    private fun userRegistrationSuccess() {
         Toast.makeText(this@RegisterActivity, getString(R.string.register_success),
             Toast.LENGTH_LONG).show()
     }
 
-
+    @SuppressLint("SimpleDateFormat")
+    private fun isDateValid(date: String): Boolean {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        format.isLenient = false
+        return try {
+            format.parse(date)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

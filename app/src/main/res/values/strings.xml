@@ -2,6 +2,10 @@
     <string name="app_name">VaccinationManagement</string>
     <string name="err_msg_enter_email">Please enter your email</string>
     <string name="err_msg_enter_name">Please enter your name</string>
+    <string name="err_msg_enter_surname">Please enter your surname</string>
+    <string name="err_msg_enter_pesel">Please enter your PESEL</string>
+    <string name="err_msg_enter_date_of_birth">Please enter your date of birth</string>
+    <string name="err_msg_date_of_birth_format">Please enter the date in a provided format</string>
     <string name="err_msg_enter_password">Please enter your password</string>
     <string name="err_msg_enter_reppassword">Please confirm your password</string>
     <string name="err_msg_password_mismatch">Passwords mismatch</string>

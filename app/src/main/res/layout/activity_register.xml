@@ -20,7 +20,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.100000024"
+        app:layout_constraintVertical_bias="0.05"
         tools:ignore="HardcodedText" />
 
     <EditText
@@ -46,6 +46,66 @@
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
     <EditText
+        android:id="@+id/inputSurnameReg"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_input"
+        android:drawableLeft="@drawable/ic_person"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="Surname"
+        android:inputType="text"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/inputName"
+        app:layout_constraintStart_toStartOf="@+id/inputName"
+        app:layout_constraintTop_toBottomOf="@+id/inputName" />
+
+    <EditText
+        android:id="@+id/inputDateOfBirthReg"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_input"
+        android:drawableLeft="@drawable/ic_cake"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="Date of Birth (yyyy-mm-dd)"
+        android:inputType="date"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/inputSurnameReg"
+        app:layout_constraintStart_toStartOf="@+id/inputSurnameReg"
+        app:layout_constraintTop_toBottomOf="@+id/inputSurnameReg" />
+
+    <EditText
+        android:id="@+id/inputPesel"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_input"
+        android:drawableLeft="@drawable/ic_identifier"
+        android:drawablePadding="10dp"
+        android:ems="10"
+        android:hint="Pesel"
+        android:inputType="date"
+        android:paddingLeft="20dp"
+        android:paddingTop="10dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="10dp"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="@+id/inputDateOfBirthReg"
+        app:layout_constraintStart_toStartOf="@+id/inputDateOfBirthReg"
+        app:layout_constraintTop_toBottomOf="@+id/inputDateOfBirthReg" />
+
+    <EditText
         android:id="@+id/inputEmailReg"
         android:layout_width="0dp"
         android:layout_height="48dp"
@@ -61,10 +121,10 @@
         android:paddingRight="20dp"
         android:paddingBottom="10dp"
         android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="@+id/inputName"
+        app:layout_constraintEnd_toEndOf="@+id/inputPesel"
         app:layout_constraintHorizontal_bias="0.426"
-        app:layout_constraintStart_toStartOf="@+id/inputName"
-        app:layout_constraintTop_toBottomOf="@+id/inputName" />
+        app:layout_constraintStart_toStartOf="@+id/inputPesel"
+        app:layout_constraintTop_toBottomOf="@+id/inputPesel" />
 
     <Button
         android:id="@+id/btnRegister"
