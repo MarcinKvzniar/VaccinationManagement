@@ -40,6 +40,29 @@ class PatientsQueries(private val connection : Connection) : PatientsDAO {
         return result
     }
 
+    /*
+    Try this function instead (do not forget to add imports):
+    fun insertPatient(patient: Patients)  {
+    val sql = "INSERT INTO Patients (pesel, name, surname, dateOfBirth) VALUES (?, ?, ?, ?)"
+
+    try {
+        val connection = DBconnection.getConnection() // Get the database connection
+        val preparedStatement = connection.prepareStatement(sql)
+        preparedStatement.setString(1, patient.pesel)
+        preparedStatement.setString(2, patient.name)
+        preparedStatement.setString(3, patient.surname)
+        preparedStatement.setDate(4, patient.dateOfBirth)
+
+        Log.d("SQL Query", "Executing query: $sql with parameters: ${patient.pesel}, ${patient.name}, ${patient.surname}, ${patient.dateOfBirth}")
+
+        preparedStatement.executeUpdate()
+        connection.close() // Close the database connection
+    } catch (e: SQLException) {
+        Log.e("SQL Error", "Error executing query: $sql", e)
+    }
+}
+     */
+
     override fun updatePatient(pesel: String, patient: Patients): Boolean {
         val query = "{CALL updatePatient(?, ?, ?, ?)}"
         val callableStatement = connection.prepareCall(query)
