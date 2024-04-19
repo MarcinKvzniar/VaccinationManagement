@@ -30,6 +30,45 @@ class VaccinesQueries(private val connection : Connection) : VaccinesDAO {
         }
     }
 
+    override fun getDosesByVaccineName(vaccineName: String): Int {
+        val query = "{CALL getDosesByVaccineName(?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setString(1, vaccineName)
+        val resultSet = callableStatement.executeQuery()
+
+        return if (resultSet.next()) {
+            resultSet.getInt("requiredDoses")
+        } else {
+            0
+        }
+    }
+
+    override fun getVaccineIdByVaccineName(vaccineName: String): Int {
+        val preparedStatement = connection
+            .prepareStatement("SELECT id FROM Vaccines WHERE vaccine_name = ?")
+        preparedStatement.setString(1, vaccineName)
+
+        val resultSet = preparedStatement.executeQuery()
+        return if (resultSet.next()) {
+            resultSet.getInt(1)
+        } else {
+            0
+        }
+    }
+
+    override fun getAppointmentsCountForVaccine(vaccineName: String): Int {
+        val preparedStatement = connection
+            .prepareStatement("SELECT COUNT(*) FROM Appointments WHERE vaccine_name = ?")
+        preparedStatement.setString(1, vaccineName)
+
+        val resultSet = preparedStatement.executeQuery()
+        return if (resultSet.next()) {
+            resultSet.getInt(1)
+        } else {
+            0
+        }
+    }
+
     override fun getAllVaccines(): Set<Vaccines?>? {
         val query = "{CALL getVaccines()}"
         val callableStatement = connection.prepareCall(query)

@@ -4,7 +4,7 @@ import java.sql.Time
 import java.sql.Date
 
 data class Appointments(
-    var id: Int,
+    var id: Int? = null,
     var vaccineId: Int,
     var pesel: String,
     var doctorId: Int,
