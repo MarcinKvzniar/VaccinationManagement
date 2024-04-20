@@ -36,7 +36,13 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
         // Prepare the call to the MySQL stored procedure
         val call = "{CALL insertAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
         val statement = connection.prepareCall(call)
-        statement.setInt(1, appointment.id)
+        val id = appointment.id
+        if (id != null) {
+            statement.setInt(1, id)
+        } else {
+            statement.setNull(1, java.sql.Types.INTEGER)
+        }
+
         statement.setInt(2, appointment.vaccineId)
         statement.setString(3, appointment.pesel)
         statement.setInt(4, appointment.doctorId)
@@ -54,7 +60,7 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
     override fun updateAppointment(id: Int, appointment: Appointments): Boolean {
         val query = "{CALL updateAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
         val callableStatement = connection.prepareCall(query)
-        callableStatement.setInt(1, appointment.id)
+        callableStatement.setInt(1, id)
         callableStatement.setInt(2, appointment.vaccineId)
         callableStatement.setString(3, appointment.pesel)
         callableStatement.setInt(4, appointment.doctorId)
