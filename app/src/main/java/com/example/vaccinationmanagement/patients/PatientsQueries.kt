@@ -77,7 +77,7 @@ class PatientsQueries(private val connection : Connection) : PatientsDAO {
     private fun mapResultSetToPatient(resultSet: ResultSet): Patients {
         return Patients(
             pesel = resultSet.getString("pesel"),
-            uId = resultSet.getString("u_id"),
+            uId = resultSet.getString("uid"),
             name = resultSet.getString("name"),
             surname = resultSet.getString("surname"),
             dateOfBirth = resultSet.getDate("date_of_birth")

@@ -83,7 +83,12 @@ class VaccinesQueries(private val connection : Connection) : VaccinesDAO {
     override fun insertVaccine(vaccine: Vaccines): Boolean {
         val call = "{CALL insertVaccine(?, ?, ?, ?, ?)}"
         val statement = connection.prepareCall(call)
-        statement.setInt(1, vaccine.id)
+        val id = vaccine.id
+        if (id != null) {
+            statement.setInt(1, id)
+        } else {
+            statement.setNull(1, java.sql.Types.INTEGER)
+        }
         statement.setString(2, vaccine.vaccineName)
         statement.setInt(3, vaccine.requiredDoses)
         statement.setInt(4, vaccine.daysBetweenDoses)

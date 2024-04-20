@@ -9,12 +9,15 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.vaccinationmanagement.R
 import com.example.vaccinationmanagement.dbConfig.DBconnection
 import com.example.vaccinationmanagement.patients.Patients
 import com.example.vaccinationmanagement.patients.PatientsQueries
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.sql.Date
 import java.text.SimpleDateFormat
 
@@ -121,7 +124,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerUser() {
-        val login = inputEmailReg.text.toString().trim()
+        val email = inputEmailReg.text.toString().trim()
         val name = inputNameReg.text.toString().trim()
         val surname = inputSurnameReg.text.toString().trim()
         val dateOfBirth = inputDateOfBirthReg.text.toString().trim()
@@ -130,32 +133,41 @@ class RegisterActivity : AppCompatActivity() {
 
         FirebaseAuth
             .getInstance()
-            .createUserWithEmailAndPassword(login, password)
+            .createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     val firebaseUser: FirebaseUser = task.result?.user!!
                     val uid = firebaseUser.uid
-                    try {
-                        val connection = DBconnection.getConnection()
-                        val patientQuery = PatientsQueries(connection)
-                        val newUser = Patients(pesel, uid, name, surname, Date.valueOf(dateOfBirth))
 
-                        patientQuery.insertPatient(newUser)
+                    insertUserToDB(pesel, uid, name, surname, Date.valueOf(dateOfBirth))
+                } else {
+                    userRegistrationFailure()
+                }
+            }
+    }
 
-                        connection.close()
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
+    private fun insertUserToDB(pesel: String, uid: String, name: String, surname: String, dateOfBirth: Date) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val connection = DBconnection.getConnection()
+                val patientsQueries = PatientsQueries(connection)
+                val newPatient = Patients(pesel, uid, name, surname, dateOfBirth)
+                val insertSuccessful = patientsQueries.insertPatient(newPatient)
+                connection.close()
 
+                if (insertSuccessful) {
                     startActivity(
                         Intent(this@RegisterActivity,
-                        LoginActivity::class.java)
+                            LoginActivity::class.java)
                     )
                     finish()
                 } else {
                     userRegistrationFailure()
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+        }
     }
 
     private fun showBasicToast(message: String) {

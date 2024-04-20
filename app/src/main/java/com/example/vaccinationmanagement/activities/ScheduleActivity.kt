@@ -15,9 +15,7 @@ import com.example.vaccinationmanagement.appointments.Appointments
 import com.example.vaccinationmanagement.appointments.AppointmentsQueries
 import com.example.vaccinationmanagement.dbConfig.DBconnection
 import com.example.vaccinationmanagement.doctors.DoctorsQueries
-import com.example.vaccinationmanagement.patients.Patients
 import com.example.vaccinationmanagement.patients.PatientsQueries
-import com.example.vaccinationmanagement.vaccines.VaccinesDAO
 import com.example.vaccinationmanagement.vaccines.VaccinesQueries
 import com.google.firebase.auth.FirebaseAuth
 import java.sql.Date
