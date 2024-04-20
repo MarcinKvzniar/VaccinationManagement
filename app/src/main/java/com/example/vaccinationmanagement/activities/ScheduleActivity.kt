@@ -19,6 +19,7 @@ import com.example.vaccinationmanagement.patients.Patients
 import com.example.vaccinationmanagement.patients.PatientsQueries
 import com.example.vaccinationmanagement.vaccines.VaccinesDAO
 import com.example.vaccinationmanagement.vaccines.VaccinesQueries
+import com.google.firebase.auth.FirebaseAuth
 import java.sql.Date
 import java.sql.Time
 import java.util.Calendar
@@ -187,26 +188,33 @@ class ScheduleActivity : AppCompatActivity() {
             val appointmentsQuery = AppointmentsQueries(connection)
 
             val vaccineId = vaccineQuery.getVaccineIdByVaccineName(etVaccineName.text.toString())
-            val pesel = "12345678901" // needs to be replaced with actual patient's PESEL
-            val doctorId = getAvailableDoctors()
-            val date = Date.valueOf(dateString)
-            val time = Time.valueOf(timeString)
-            val address = enteredAddress
-            val dose = getDose()
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            uid?.let {
+                val pesel = PatientsQueries(connection).getPeselByUID(it)
+                if (pesel != null) {
+                    val doctorId = getAvailableDoctors()
+                    val date = Date.valueOf(dateString)
+                    val time = Time.valueOf(timeString)
+                    val address = enteredAddress
+                    val dose = getDose()
 
-            val newAppointment = Appointments(
-                vaccineId = vaccineId,
-                pesel = pesel,
-                doctorId = doctorId,
-                date = date,
-                time = time,
-                address = address,
-                dose = dose
-            )
+                    val newAppointment = Appointments(
+                        vaccineId = vaccineId,
+                        pesel = pesel,
+                        doctorId = doctorId,
+                        date = date,
+                        time = time,
+                        address = address,
+                        dose = dose
+                    )
 
-            appointmentsQuery.insertAppointment(newAppointment)
-
+                    appointmentsQuery.insertAppointment(newAppointment)
+                } else {
+                    showToast("Logged patient not found")
+                }
+            }
             connection.close()
+
         } catch (e: Exception) {
             e.printStackTrace()
         }

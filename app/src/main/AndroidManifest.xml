@@ -13,9 +13,6 @@
         android:theme="@style/Theme.VaccinationManagement"
         tools:targetApi="34">
         <activity
-            android:name=".activities.AccountActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.history.HistoryAdapter"
             android:exported="false" />
         <activity

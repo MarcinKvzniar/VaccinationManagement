@@ -14,6 +14,7 @@ import com.example.vaccinationmanagement.dbConfig.DBconnection
 import com.example.vaccinationmanagement.patients.Patients
 import com.example.vaccinationmanagement.patients.PatientsQueries
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import java.sql.Date
 import java.text.SimpleDateFormat
 
@@ -132,10 +133,12 @@ class RegisterActivity : AppCompatActivity() {
             .createUserWithEmailAndPassword(login, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    val firebaseUser: FirebaseUser = task.result?.user!!
+                    val uid = firebaseUser.uid
                     try {
                         val connection = DBconnection.getConnection()
                         val patientQuery = PatientsQueries(connection)
-                        val newUser = Patients(pesel, name, surname, Date.valueOf(dateOfBirth))
+                        val newUser = Patients(pesel, uid, name, surname, Date.valueOf(dateOfBirth))
 
                         patientQuery.insertPatient(newUser)
 
@@ -150,7 +153,7 @@ class RegisterActivity : AppCompatActivity() {
                     )
                     finish()
                 } else {
-                    userRegistrationSuccess()
+                    userRegistrationFailure()
                 }
             }
     }
@@ -159,8 +162,8 @@ class RegisterActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun userRegistrationSuccess() {
-        Toast.makeText(this@RegisterActivity, getString(R.string.register_success),
+    private fun userRegistrationFailure() {
+        Toast.makeText(this@RegisterActivity, getString(R.string.register_failure),
             Toast.LENGTH_LONG).show()
     }
 

@@ -3,6 +3,8 @@ package com.example.vaccinationmanagement.patients
 interface PatientsDAO {
     fun getPatientByPesel(pesel: String): Patients?
 
+    fun getPeselByUID(uid: String?): String?
+
     fun getAllPatients(): Set<Patients?>?
 
     fun insertPatient(patient: Patients) : Boolean

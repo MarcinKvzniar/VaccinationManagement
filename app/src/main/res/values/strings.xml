@@ -11,7 +11,7 @@
     <string name="err_msg_password_mismatch">Passwords mismatch</string>
     <string name="err_msg_password_length">Password needs to have at least 8 signs</string>
     <string name="err_msg_password_special_chars">Password needs to have at least one special character</string>
-    <string name="register_success">You are registered successfully</string>
+    <string name="register_failure">Registration failed. Try again.</string>
     <string name="err_msg_user_not_found">User not found. Please register.</string>
     <string name="err_msg_wrong_password">Incorrect password. Please try again.</string>
     <string name="err_msg_unknown_error">An unknown error occurred. Please try again later.</string>
