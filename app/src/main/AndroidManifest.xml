@@ -21,6 +21,8 @@
         <activity
             android:name=".activities.HomeActivity"
             android:exported="false" />
+        <activity android:name=".activities.ScheduleActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.authentication.RegisterActivity"
             android:exported="false" />

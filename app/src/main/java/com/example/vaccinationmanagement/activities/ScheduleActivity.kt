@@ -1,5 +1,6 @@
 package com.example.vaccinationmanagement.activities
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
@@ -10,6 +11,7 @@ import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.vaccinationmanagement.R
 import com.example.vaccinationmanagement.appointments.Appointments
 import com.example.vaccinationmanagement.appointments.AppointmentsQueries
@@ -18,8 +20,11 @@ import com.example.vaccinationmanagement.doctors.DoctorsQueries
 import com.example.vaccinationmanagement.patients.PatientsQueries
 import com.example.vaccinationmanagement.vaccines.VaccinesQueries
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.sql.Date
 import java.sql.Time
+import java.text.SimpleDateFormat
 import java.util.Calendar
 
 class ScheduleActivity : AppCompatActivity() {
@@ -54,12 +59,12 @@ class ScheduleActivity : AppCompatActivity() {
             showAddressEntryDialog()
         }
 
-        btnSaveSchedule.setOnClickListener {
-            getDose()
+        btnGetDoctor.setOnClickListener {
+            getAvailableDoctors()
+        }
 
-            Handler(Looper.getMainLooper()).postDelayed({
-                saveSchedule()
-            }, 2000)
+        btnSaveSchedule.setOnClickListener {
+            saveSchedule()
         }
     }
 
@@ -83,10 +88,14 @@ class ScheduleActivity : AppCompatActivity() {
 
         btnSetDate.setOnClickListener {
             val selectedYear = datePicker.year
-            val selectedMonth = datePicker.month
+            val selectedMonth = datePicker.month + 1
             val selectedDay = datePicker.dayOfMonth
 
-            dateString = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+            dateString = if (selectedMonth < 10)
+                "$selectedYear-0$selectedMonth-$selectedDay"
+            else
+                "$selectedYear-$selectedMonth-$selectedDay"
+
             showToast("Selected Date: $dateString")
 
             dialog.dismiss()
@@ -166,7 +175,7 @@ class ScheduleActivity : AppCompatActivity() {
             val doctors = doctorQuery.getAllDoctors()
             connection.close()
 
-            if (!doctors.isNullOrEmpty()) {
+            if (doctors != null) {
                 val doctor = doctors.random()
                 showToast("Doctor: ${doctor?.name} ${doctor?.surname}")
                 doctorId = doctor?.id ?: 0
@@ -180,43 +189,121 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private fun saveSchedule() {
+        val vaccineName = etVaccineName.text.toString().trim()
+
+        val vaccineId = getVaccineIdByVaccineName(vaccineName)
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        val pesel = getPatientPesel(uid)
+        val doctorId = getAvailableDoctors()
+
+        val date = Date.valueOf(dateString)
+        if (!isDateValid(dateString)) {
+            showToast("Invalid date format")
+            return
+        }
+
+        val time = Time.valueOf(timeString)
+        if (!isTimeValid(timeString)) {
+            showToast("Invalid time format")
+            return
+        }
+
+        val address = enteredAddress
+        val dose = getDose()
+
+        insertAppointmentIntoDB(vaccineId, pesel, doctorId, date, time, address, dose)
+    }
+
+    private fun insertAppointmentIntoDB(vaccineId: Int, pesel: String, doctorId: Int, date: Date, time: Time, address: String, dose: Int) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val connection = DBconnection.getConnection()
+                val appointmentQuery = AppointmentsQueries(connection)
+                val newAppointment = Appointments(
+                    vaccineId = vaccineId,
+                    pesel = pesel,
+                    doctorId = doctorId,
+                    date = date,
+                    time = time,
+                    address = address,
+                    dose = dose
+                )
+                val insertSuccessful = appointmentQuery.insertAppointment(newAppointment)
+                connection.close()
+
+                if (insertSuccessful) {
+                    showToast("Appointment scheduled successfully")
+                } else {
+                    showToast("Appointment scheduling failed")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun getVaccineIdByVaccineName(vaccineName: String): Int {
+        var vaccineId = 0
         try {
             val connection = DBconnection.getConnection()
             val vaccineQuery = VaccinesQueries(connection)
-            val appointmentsQuery = AppointmentsQueries(connection)
-
-            val vaccineId = vaccineQuery.getVaccineIdByVaccineName(etVaccineName.text.toString())
-            val uid = FirebaseAuth.getInstance().currentUser?.uid
-            uid?.let {
-                val pesel = PatientsQueries(connection).getPeselByUID(it)
-                if (pesel != null) {
-                    val doctorId = getAvailableDoctors()
-                    val date = Date.valueOf(dateString)
-                    val time = Time.valueOf(timeString)
-                    val address = enteredAddress
-                    val dose = getDose()
-
-                    val newAppointment = Appointments(
-                        vaccineId = vaccineId,
-                        pesel = pesel,
-                        doctorId = doctorId,
-                        date = date,
-                        time = time,
-                        address = address,
-                        dose = dose
-                    )
-
-                    appointmentsQuery.insertAppointment(newAppointment)
-                } else {
-                    showToast("Logged patient not found")
-                }
-            }
+            vaccineId = vaccineQuery.getVaccineIdByVaccineName(vaccineName)
             connection.close()
-
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        return vaccineId
+    }
 
+    private fun getPatientPesel(uid: String?): String {
+        var pesel = ""
+        try {
+            val connection = DBconnection.getConnection()
+            val patientsQuery = PatientsQueries(connection)
+            pesel = patientsQuery.getPeselByUID(uid) ?: ""
+            connection.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return pesel
+    }
+
+    private fun checkIfVaccineExists(vaccineName: String): Boolean {
+        var exists = false
+        try {
+            val connection = DBconnection.getConnection()
+            val vaccineQuery = VaccinesQueries(connection)
+            val vaccine = vaccineQuery.getVaccineByName(vaccineName)
+            connection.close()
+            exists = vaccine != null
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return exists
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun isDateValid(date: String): Boolean {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        format.isLenient = false
+        return try {
+            format.parse(date)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun isTimeValid(time: String): Boolean {
+        val format = SimpleDateFormat("HH:mm")
+        format.isLenient = false
+        return try {
+            format.parse(time)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     private fun showToast(message: String) {

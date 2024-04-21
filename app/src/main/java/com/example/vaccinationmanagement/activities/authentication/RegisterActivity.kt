@@ -139,14 +139,14 @@ class RegisterActivity : AppCompatActivity() {
                     val firebaseUser: FirebaseUser = task.result?.user!!
                     val uid = firebaseUser.uid
 
-                    insertUserToDB(pesel, uid, name, surname, Date.valueOf(dateOfBirth))
+                    insertPatientIntoDB(pesel, uid, name, surname, Date.valueOf(dateOfBirth))
                 } else {
                     userRegistrationFailure()
                 }
             }
     }
 
-    private fun insertUserToDB(pesel: String, uid: String, name: String, surname: String, dateOfBirth: Date) {
+    private fun insertPatientIntoDB(pesel: String, uid: String, name: String, surname: String, dateOfBirth: Date) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val connection = DBconnection.getConnection()

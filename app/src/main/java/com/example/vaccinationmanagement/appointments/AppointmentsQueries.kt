@@ -33,7 +33,6 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
 
     // Inserts a new appointment into the database
     override fun insertAppointment(appointment: Appointments): Boolean {
-        // Prepare the call to the MySQL stored procedure
         val call = "{CALL insertAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
         val statement = connection.prepareCall(call)
         val id = appointment.id
