@@ -1,5 +1,6 @@
 package com.example.vaccinationmanagement.appointments
 
+import com.example.vaccinationmanagement.activities.notifications.NotificationPreferences
 import java.sql.Time
 import java.sql.Date
 
@@ -12,6 +13,7 @@ data class Appointments(
     var address: String,
     var vaccineName: String,
     var dose: Int,
+    var notificationPreferences: NotificationPreferences? = null,
 )
 
 

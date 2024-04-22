@@ -15,4 +15,6 @@
     <string name="err_msg_user_not_found">User not found. Please register.</string>
     <string name="err_msg_wrong_password">Incorrect password. Please try again.</string>
     <string name="err_msg_unknown_error">An unknown error occurred. Please try again later.</string>
+    <string name="channel_name">Vaccination Reminder</string>
+    <string name="channel_description">Reminders for your upcoming vaccination appointments</string>
 </resources>
