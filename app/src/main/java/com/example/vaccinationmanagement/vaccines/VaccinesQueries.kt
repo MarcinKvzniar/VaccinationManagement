@@ -31,13 +31,13 @@ class VaccinesQueries(private val connection : Connection) : VaccinesDAO {
     }
 
     override fun getDosesByVaccineName(vaccineName: String): Int {
-        val query = "{CALL getDosesByVaccineName(?)}"
-        val callableStatement = connection.prepareCall(query)
-        callableStatement.setString(1, vaccineName)
-        val resultSet = callableStatement.executeQuery()
+        val preparedStatement = connection
+            .prepareStatement("SELECT required_doses FROM Vaccines WHERE vaccine_name = ?")
+        preparedStatement.setString(1, vaccineName)
 
+        val resultSet = preparedStatement.executeQuery()
         return if (resultSet.next()) {
-            resultSet.getInt("requiredDoses")
+            resultSet.getInt(1)
         } else {
             0
         }

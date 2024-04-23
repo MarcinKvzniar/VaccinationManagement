@@ -190,7 +190,10 @@ class ScheduleActivity : AppCompatActivity() {
 
     private fun saveSchedule() {
         val vaccineName = etVaccineName.text.toString().trim()
-
+        if (!checkIfVaccineExists(vaccineName)) {
+            showToast("Invalid vaccine name")
+            return
+        }
         val vaccineId = getVaccineIdByVaccineName(vaccineName)
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         val pesel = getPatientPesel(uid)
