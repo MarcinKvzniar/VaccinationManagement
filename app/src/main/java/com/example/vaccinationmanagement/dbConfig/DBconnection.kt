@@ -4,7 +4,6 @@ import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.SQLException
 
-// Singleton object responsible for managing database connections
 object DBconnection {
     // Database connection details
     private const val URL = "jdbc:mysql://sql11.freesqldatabase.com:3306/sql11698482?useUnicode=true&characterEncoding=utf-8&serverTimezone=CET"   // TODO set in environmental variables
@@ -13,7 +12,7 @@ object DBconnection {
 
     // Static initializer block to register the MySQL JDBC driver
     init {
-        Class.forName("com.mysql.cj.jdbc.Driver")
+        Class.forName("com.mysql.jdbc.Driver")
     }
 
     // Function to get a connection to the database

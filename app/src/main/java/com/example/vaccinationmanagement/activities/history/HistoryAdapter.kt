@@ -31,7 +31,6 @@ class HistoryAdapter(private val vaccinationHistory: List<Appointments>) : Recyc
         holder.textDate.text = vaccination.date.toString()
         holder.textTime.text = vaccination.time.toString()
         holder.textAddress.text = vaccination.address
-        holder.textVaccineName.text = vaccination.vaccineName
         holder.textDose.text = vaccination.dose.toString()
     }
 

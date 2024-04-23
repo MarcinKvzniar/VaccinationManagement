@@ -1,14 +1,30 @@
 package com.example.vaccinationmanagement.activities
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import com.example.vaccinationmanagement.R
+import com.example.vaccinationmanagement.appointments.Appointments
+import com.example.vaccinationmanagement.appointments.AppointmentsQueries
+import com.example.vaccinationmanagement.dbConfig.DBconnection
+import com.example.vaccinationmanagement.doctors.DoctorsQueries
+import com.example.vaccinationmanagement.patients.PatientsQueries
+import com.example.vaccinationmanagement.vaccines.VaccinesQueries
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.sql.Date
+import java.sql.Time
+import java.text.SimpleDateFormat
 import java.util.Calendar
 
 class ScheduleActivity : AppCompatActivity() {
@@ -20,6 +36,7 @@ class ScheduleActivity : AppCompatActivity() {
     private lateinit var selectedTime: Calendar
     private lateinit var btnSaveSchedule: Button
     private lateinit var btnEnterAddress: Button
+    private lateinit var btnGetDoctor: Button
     private var enteredAddress: String = ""
     private var dateString: String = ""
     private var timeString: String = ""
@@ -42,6 +59,10 @@ class ScheduleActivity : AppCompatActivity() {
             showAddressEntryDialog()
         }
 
+        btnGetDoctor.setOnClickListener {
+            getAvailableDoctors()
+        }
+
         btnSaveSchedule.setOnClickListener {
             saveSchedule()
         }
@@ -55,6 +76,7 @@ class ScheduleActivity : AppCompatActivity() {
         selectedTime = Calendar.getInstance()
         btnSaveSchedule = findViewById(R.id.btnScheduleAppointment)
         btnEnterAddress = findViewById(R.id.btnEnterAddress)
+        btnGetDoctor = findViewById(R.id.btnGetTheDoctor)
     }
 
     private fun showDatePickerDialog() {
@@ -66,10 +88,14 @@ class ScheduleActivity : AppCompatActivity() {
 
         btnSetDate.setOnClickListener {
             val selectedYear = datePicker.year
-            val selectedMonth = datePicker.month
+            val selectedMonth = datePicker.month + 1
             val selectedDay = datePicker.dayOfMonth
 
-            dateString = "$selectedDay/${selectedMonth + 1}/$selectedYear"
+            dateString = if (selectedMonth < 10)
+                "$selectedYear-0$selectedMonth-$selectedDay"
+            else
+                "$selectedYear-$selectedMonth-$selectedDay"
+
             showToast("Selected Date: $dateString")
 
             dialog.dismiss()
@@ -118,23 +144,166 @@ class ScheduleActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun getDose() {
-        // TODO implement this function
-        // check the dose of the vaccine by its name
-        // fetch total doses from MySQL database and subtract the user doses assigned
-        // to the particular vaccine
+    private fun getDose(): Int {
+        val vaccineName = etVaccineName.text.toString()
+        var doseNumber = 0
+        try {
+            val connection = DBconnection.getConnection()
+            val vaccineQuery = VaccinesQueries(connection)
+            val totalDoses = vaccineQuery.getDosesByVaccineName(vaccineName)
+            val appointmentCount = vaccineQuery.getAppointmentsCountForVaccine(vaccineName)
+
+            doseNumber = appointmentCount + 1
+
+            if (doseNumber <= totalDoses) {
+                showToast("Dose number: $doseNumber / $totalDoses")
+            } else {
+                showToast("All doses have been administered")
+            }
+            connection.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return doseNumber
     }
 
-    private fun getAvailableDoctors() {
-        // TODO implement this function
-        // fetch available doctors from MySQL database
-        // for the time being it can be randomly selected doctor
-        // for the future implementation - doctors who are available on the selected date and time
+    private fun getAvailableDoctors(): Int {
+        var doctorId = 0
+        try {
+            val connection = DBconnection.getConnection()
+            val doctorQuery = DoctorsQueries(connection)
+            val doctors = doctorQuery.getAllDoctors()
+            connection.close()
+
+            if (doctors != null) {
+                val doctor = doctors.random()
+                showToast("Doctor: ${doctor?.name} ${doctor?.surname}")
+                doctorId = doctor?.id ?: 0
+            } else {
+                showToast("No doctors available")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return doctorId
     }
 
     private fun saveSchedule() {
-        // TODO implement this function
-        // save the schedule to MySQL database
+        val vaccineName = etVaccineName.text.toString().trim()
+
+        val vaccineId = getVaccineIdByVaccineName(vaccineName)
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
+        val pesel = getPatientPesel(uid)
+        val doctorId = getAvailableDoctors()
+
+        val date = Date.valueOf(dateString)
+        if (!isDateValid(dateString)) {
+            showToast("Invalid date format")
+            return
+        }
+
+        val time = Time.valueOf(timeString)
+        if (!isTimeValid(timeString)) {
+            showToast("Invalid time format")
+            return
+        }
+
+        val address = enteredAddress
+        val dose = getDose()
+
+        insertAppointmentIntoDB(vaccineId, pesel, doctorId, date, time, address, dose)
+    }
+
+    private fun insertAppointmentIntoDB(vaccineId: Int, pesel: String, doctorId: Int, date: Date, time: Time, address: String, dose: Int) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val connection = DBconnection.getConnection()
+                val appointmentQuery = AppointmentsQueries(connection)
+                val newAppointment = Appointments(
+                    vaccineId = vaccineId,
+                    pesel = pesel,
+                    doctorId = doctorId,
+                    date = date,
+                    time = time,
+                    address = address,
+                    dose = dose
+                )
+                val insertSuccessful = appointmentQuery.insertAppointment(newAppointment)
+                connection.close()
+
+                if (insertSuccessful) {
+                    showToast("Appointment scheduled successfully")
+                } else {
+                    showToast("Appointment scheduling failed")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun getVaccineIdByVaccineName(vaccineName: String): Int {
+        var vaccineId = 0
+        try {
+            val connection = DBconnection.getConnection()
+            val vaccineQuery = VaccinesQueries(connection)
+            vaccineId = vaccineQuery.getVaccineIdByVaccineName(vaccineName)
+            connection.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return vaccineId
+    }
+
+    private fun getPatientPesel(uid: String?): String {
+        var pesel = ""
+        try {
+            val connection = DBconnection.getConnection()
+            val patientsQuery = PatientsQueries(connection)
+            pesel = patientsQuery.getPeselByUID(uid) ?: ""
+            connection.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return pesel
+    }
+
+    private fun checkIfVaccineExists(vaccineName: String): Boolean {
+        var exists = false
+        try {
+            val connection = DBconnection.getConnection()
+            val vaccineQuery = VaccinesQueries(connection)
+            val vaccine = vaccineQuery.getVaccineByName(vaccineName)
+            connection.close()
+            exists = vaccine != null
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return exists
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun isDateValid(date: String): Boolean {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        format.isLenient = false
+        return try {
+            format.parse(date)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun isTimeValid(time: String): Boolean {
+        val format = SimpleDateFormat("HH:mm")
+        format.isLenient = false
+        return try {
+            format.parse(time)
+            true
+        } catch (e: Exception) {
+            false
+        }
     }
 
     private fun showToast(message: String) {

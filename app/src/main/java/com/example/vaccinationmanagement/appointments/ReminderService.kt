@@ -50,7 +50,7 @@ class ReminderService(private val context: Context, private val appointmentsDAO:
         for ((index, triggerAtMillis) in triggerAtMillisList.withIndex()) {
             val pendingIntent = PendingIntent.getBroadcast(  // each pendingIntent unique because in other way it will overwrite each other
                 context,
-                appointment.id + index,
+                appointment.id!! + index,
                 intent,
                 PendingIntent.FLAG_UPDATE_CURRENT
             )

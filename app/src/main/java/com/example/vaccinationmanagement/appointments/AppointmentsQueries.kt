@@ -33,16 +33,21 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
 
     // Inserts a new appointment into the database
     override fun insertAppointment(appointment: Appointments): Boolean {
-        // Prepare the call to the MySQL stored procedure
         val call = "{CALL insertAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
         val statement = connection.prepareCall(call)
-        statement.setInt(1, appointment.id)
-        statement.setString(2, appointment.pesel)
-        statement.setInt(3, appointment.doctorId)
-        statement.setDate(4, appointment.date)
-        statement.setTime(5, appointment.time)
-        statement.setString(6, appointment.address)
-        statement.setString(7, appointment.vaccineName)
+        val id = appointment.id
+        if (id != null) {
+            statement.setInt(1, id)
+        } else {
+            statement.setNull(1, java.sql.Types.INTEGER)
+        }
+
+        statement.setInt(2, appointment.vaccineId)
+        statement.setString(3, appointment.pesel)
+        statement.setInt(4, appointment.doctorId)
+        statement.setDate(5, appointment.date)
+        statement.setTime(6, appointment.time)
+        statement.setString(7, appointment.address)
         statement.setInt(8, appointment.dose)
         val result = !statement.execute()
         statement.close()
@@ -54,13 +59,13 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
     override fun updateAppointment(id: Int, appointment: Appointments): Boolean {
         val query = "{CALL updateAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
         val callableStatement = connection.prepareCall(query)
-        callableStatement.setInt(1, appointment.id)
-        callableStatement.setString(2, appointment.pesel)
-        callableStatement.setInt(3, appointment.doctorId)
-        callableStatement.setDate(4, appointment.date)
-        callableStatement.setTime(5, appointment.time)
-        callableStatement.setString(6, appointment.address)
-        callableStatement.setString(7, appointment.vaccineName)
+        callableStatement.setInt(1, id)
+        callableStatement.setInt(2, appointment.vaccineId)
+        callableStatement.setString(3, appointment.pesel)
+        callableStatement.setInt(4, appointment.doctorId)
+        callableStatement.setDate(5, appointment.date)
+        callableStatement.setTime(6, appointment.time)
+        callableStatement.setString(7, appointment.address)
         callableStatement.setInt(8, appointment.dose)
 
         return callableStatement.executeUpdate() > 0
@@ -80,12 +85,12 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
     private fun mapResultSetToAppointment(resultSet: ResultSet): Appointments {
         return Appointments(
             id = resultSet.getInt("id"),
+            vaccineId = resultSet.getInt("vaccine_id"),
             pesel = resultSet.getString("pesel"),
             doctorId = resultSet.getInt("doctor_id"),
             date = resultSet.getDate("date"),
             time = resultSet.getTime("time"),
             address = resultSet.getString("address"),
-            vaccineName = resultSet.getString("vaccination_name"),
             dose = resultSet.getInt("dose")
         )
     }
