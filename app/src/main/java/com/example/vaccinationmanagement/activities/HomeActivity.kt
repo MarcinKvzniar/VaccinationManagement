@@ -8,8 +8,6 @@ import com.example.vaccinationmanagement.R
 import com.example.vaccinationmanagement.activities.authentication.LoginActivity
 import com.example.vaccinationmanagement.activities.history.HistoryActivity
 import com.example.vaccinationmanagement.activities.notifications.UserNotificationService
-import com.example.vaccinationmanagement.appointments.Appointments
-import com.example.vaccinationmanagement.appointments.AppointmentsDAO
 import com.example.vaccinationmanagement.appointments.AppointmentsDAOImpl
 
 class HomeActivity : AppCompatActivity() {

@@ -113,7 +113,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToHomeActivity() {
-        val uid = FirebaseAuth.getInstance().currentUser?.email.toString()
+        val uid = FirebaseAuth.getInstance().currentUser?.uid
 
         val intent = Intent(this, HomeActivity::class.java)
         intent.putExtra("uID", uid)

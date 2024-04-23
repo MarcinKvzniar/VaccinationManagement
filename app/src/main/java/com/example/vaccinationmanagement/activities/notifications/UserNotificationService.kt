@@ -33,7 +33,7 @@ class UserNotificationService(private val context: Context, private val appointm
 
         val pendingIntent = PendingIntent.getBroadcast(
             context,
-            appointment.id,
+            appointment.id ?: 0,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
         )
@@ -44,7 +44,7 @@ class UserNotificationService(private val context: Context, private val appointm
             "Vaccination Reminder",
             "You have a vaccination appointment coming up!"
         )
-        notificationHelper.notify(appointment.id, notification)
+        notificationHelper.notify(appointment.id ?: 0, notification)
     }
 
     fun cancelNotifications() {

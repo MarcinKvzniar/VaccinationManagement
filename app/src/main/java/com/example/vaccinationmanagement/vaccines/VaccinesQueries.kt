@@ -18,11 +18,11 @@ class VaccinesQueries(private val connection : Connection) : VaccinesDAO {
     }
 
     override fun getVaccineByName(vaccineName: String): Vaccines? {
-        val query = "{CALL getVaccineByName(?)}"
-        val callableStatement = connection.prepareCall(query)
-        callableStatement.setString(1, vaccineName)
-        val resultSet = callableStatement.executeQuery()
+        val preparedStatement = connection
+            .prepareStatement("SELECT * FROM Vaccines WHERE vaccine_name = ?")
+        preparedStatement.setString(1, vaccineName)
 
+        val resultSet = preparedStatement.executeQuery()
         return if (resultSet.next()) {
             mapResultSetToVaccine(resultSet)
         } else {

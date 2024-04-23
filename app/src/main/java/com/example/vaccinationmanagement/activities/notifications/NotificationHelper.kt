@@ -55,7 +55,7 @@ class NotificationHelper(private val context: Context) {
     fun scheduleNotification(appointment: Appointments) {
         val intent = Intent(context, NotificationReceiver::class.java)
         intent.putExtra("appointmentId", appointment.id)
-        val pendingIntent = PendingIntent.getBroadcast(context, appointment.id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(context, appointment.id ?: 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.set(AlarmManager.RTC_WAKEUP, appointment.date.time, pendingIntent)
@@ -63,7 +63,7 @@ class NotificationHelper(private val context: Context) {
 
     fun cancelNotification(appointment: Appointments) {
         val intent = Intent(context, NotificationReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(context, appointment.id, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getBroadcast(context, appointment.id ?: 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         alarmManager.cancel(pendingIntent)
