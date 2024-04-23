@@ -58,5 +58,6 @@ class HomeActivity : AppCompatActivity() {
         btnSchedule = findViewById(R.id.btnSchedule)
         btnHistory = findViewById(R.id.btnHistory)
         btnLogOut = findViewById(R.id.btnLogOut)
+        btnNotifications = findViewById(R.id.btnNotifications)
     }
 }
