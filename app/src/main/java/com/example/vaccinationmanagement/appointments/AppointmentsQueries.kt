@@ -33,22 +33,16 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
 
     // Inserts a new appointment into the database
     override fun insertAppointment(appointment: Appointments): Boolean {
-        val call = "{CALL insertAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
+        val call = "{CALL insertAppointment(?, ?, ?, ?, ?, ?, ?)}"
         val statement = connection.prepareCall(call)
-        val id = appointment.id
-        if (id != null) {
-            statement.setInt(1, id)
-        } else {
-            statement.setNull(1, java.sql.Types.INTEGER)
-        }
 
-        statement.setInt(2, appointment.vaccineId)
-        statement.setString(3, appointment.pesel)
-        statement.setInt(4, appointment.doctorId)
-        statement.setDate(5, appointment.date)
-        statement.setTime(6, appointment.time)
-        statement.setString(7, appointment.address)
-        statement.setInt(8, appointment.dose)
+        statement.setInt(1, appointment.vaccineId)
+        statement.setString(2, appointment.pesel)
+        statement.setInt(3, appointment.doctorId)
+        statement.setDate(4, appointment.date)
+        statement.setTime(5, appointment.time)
+        statement.setString(6, appointment.address)
+        statement.setInt(7, appointment.dose)
         val result = !statement.execute()
         statement.close()
 

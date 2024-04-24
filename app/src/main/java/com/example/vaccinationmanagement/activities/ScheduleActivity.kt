@@ -2,9 +2,11 @@ package com.example.vaccinationmanagement.activities
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
@@ -13,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.vaccinationmanagement.R
+import com.example.vaccinationmanagement.activities.authentication.LoginActivity
 import com.example.vaccinationmanagement.appointments.Appointments
 import com.example.vaccinationmanagement.appointments.AppointmentsQueries
 import com.example.vaccinationmanagement.dbConfig.DBconnection
@@ -21,7 +24,9 @@ import com.example.vaccinationmanagement.patients.PatientsQueries
 import com.example.vaccinationmanagement.vaccines.VaccinesQueries
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.sql.Date
 import java.sql.Time
 import java.text.SimpleDateFormat
@@ -37,6 +42,7 @@ class ScheduleActivity : AppCompatActivity() {
     private lateinit var btnSaveSchedule: Button
     private lateinit var btnEnterAddress: Button
     private lateinit var btnGetDoctor: Button
+    private lateinit var btnGetDose: Button
     private var enteredAddress: String = ""
     private var dateString: String = ""
     private var timeString: String = ""
@@ -60,11 +66,21 @@ class ScheduleActivity : AppCompatActivity() {
         }
 
         btnGetDoctor.setOnClickListener {
-            getAvailableDoctors()
+            lifecycleScope.launch {
+                getAvailableDoctors()
+            }
+        }
+
+        btnGetDose.setOnClickListener {
+            lifecycleScope.launch {
+                getDose()
+            }
         }
 
         btnSaveSchedule.setOnClickListener {
-            saveSchedule()
+            lifecycleScope.launch {
+                saveSchedule()
+            }
         }
     }
 
@@ -77,6 +93,7 @@ class ScheduleActivity : AppCompatActivity() {
         btnSaveSchedule = findViewById(R.id.btnScheduleAppointment)
         btnEnterAddress = findViewById(R.id.btnEnterAddress)
         btnGetDoctor = findViewById(R.id.btnGetTheDoctor)
+        btnGetDose = findViewById(R.id.btnGetDose)
     }
 
     private fun showDatePickerDialog() {
@@ -91,12 +108,9 @@ class ScheduleActivity : AppCompatActivity() {
             val selectedMonth = datePicker.month + 1
             val selectedDay = datePicker.dayOfMonth
 
-            dateString = if (selectedMonth < 10)
-                "$selectedYear-0$selectedMonth-$selectedDay"
-            else
-                "$selectedYear-$selectedMonth-$selectedDay"
+            dateString = String.format("%04d-%02d-%02d", selectedYear, selectedMonth, selectedDay)
 
-            showToast("Selected Date: $dateString")
+            lifecycleScope.launch {("Selected Date: $dateString")}
 
             dialog.dismiss()
         }
@@ -118,8 +132,8 @@ class ScheduleActivity : AppCompatActivity() {
             val formattedHour = String.format("%02d", selectedHour)
             val formattedMinute = String.format("%02d", selectedMinute)
 
-            timeString = "$formattedHour:$formattedMinute"
-            showToast("Selected Time: $timeString")
+            timeString = "$formattedHour:$formattedMinute:00"
+            lifecycleScope.launch { showToast("Selected Time: $timeString") }
 
             dialog.dismiss()
         }
@@ -136,7 +150,7 @@ class ScheduleActivity : AppCompatActivity() {
 
         btnSaveAddress.setOnClickListener {
             enteredAddress = etAddress.text.toString()
-            showToast("Entered Address: $enteredAddress")
+            lifecycleScope.launch { showToast("Selected Date: $dateString") }
 
             dialog.dismiss()
         }
@@ -144,51 +158,7 @@ class ScheduleActivity : AppCompatActivity() {
         dialog.show()
     }
 
-    private fun getDose(): Int {
-        val vaccineName = etVaccineName.text.toString()
-        var doseNumber = 0
-        try {
-            val connection = DBconnection.getConnection()
-            val vaccineQuery = VaccinesQueries(connection)
-            val totalDoses = vaccineQuery.getDosesByVaccineName(vaccineName)
-            val appointmentCount = vaccineQuery.getAppointmentsCountForVaccine(vaccineName)
-
-            doseNumber = appointmentCount + 1
-
-            if (doseNumber <= totalDoses) {
-                showToast("Dose number: $doseNumber / $totalDoses")
-            } else {
-                showToast("All doses have been administered")
-            }
-            connection.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return doseNumber
-    }
-
-    private fun getAvailableDoctors(): Int {
-        var doctorId = 0
-        try {
-            val connection = DBconnection.getConnection()
-            val doctorQuery = DoctorsQueries(connection)
-            val doctors = doctorQuery.getAllDoctors()
-            connection.close()
-
-            if (doctors != null) {
-                val doctor = doctors.random()
-                showToast("Doctor: ${doctor?.name} ${doctor?.surname}")
-                doctorId = doctor?.id ?: 0
-            } else {
-                showToast("No doctors available")
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        return doctorId
-    }
-
-    private fun saveSchedule() {
+    private suspend fun saveSchedule() {
         val vaccineName = etVaccineName.text.toString().trim()
         if (!checkIfVaccineExists(vaccineName)) {
             showToast("Invalid vaccine name")
@@ -197,7 +167,7 @@ class ScheduleActivity : AppCompatActivity() {
         val vaccineId = getVaccineIdByVaccineName(vaccineName)
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         val pesel = getPatientPesel(uid)
-        val doctorId = getAvailableDoctors()
+        val doctorId = 1 // TODO implement getAvailableDoctors()
 
         val date = Date.valueOf(dateString)
         if (!isDateValid(dateString)) {
@@ -235,7 +205,14 @@ class ScheduleActivity : AppCompatActivity() {
                 connection.close()
 
                 if (insertSuccessful) {
-                    showToast("Appointment scheduled successfully")
+                    withContext(Dispatchers.Main) {
+                        showToast("Appointment scheduled successfully")
+                    }
+                    startActivity(
+                        Intent(this@ScheduleActivity,
+                            HomeActivity::class.java)
+                    )
+                    finish()
                 } else {
                     showToast("Appointment scheduling failed")
                 }
@@ -245,44 +222,98 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
-    private fun getVaccineIdByVaccineName(vaccineName: String): Int {
-        var vaccineId = 0
-        try {
-            val connection = DBconnection.getConnection()
-            val vaccineQuery = VaccinesQueries(connection)
-            vaccineId = vaccineQuery.getVaccineIdByVaccineName(vaccineName)
-            connection.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
+    private suspend fun getVaccineIdByVaccineName(vaccineName: String): Int {
+        return withContext(Dispatchers.IO) {
+            var vaccineId = 0
+            try {
+                val connection = DBconnection.getConnection()
+                val vaccineQuery = VaccinesQueries(connection)
+                vaccineId = vaccineQuery.getVaccineIdByVaccineName(vaccineName)
+                connection.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            vaccineId
         }
-        return vaccineId
     }
 
-    private fun getPatientPesel(uid: String?): String {
-        var pesel = ""
-        try {
-            val connection = DBconnection.getConnection()
-            val patientsQuery = PatientsQueries(connection)
-            pesel = patientsQuery.getPeselByUID(uid) ?: ""
-            connection.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
+    private suspend fun getPatientPesel(uid: String?): String {
+        return withContext(Dispatchers.IO) {
+            var pesel = ""
+            try {
+                val connection = DBconnection.getConnection()
+                val patientsQuery = PatientsQueries(connection)
+                pesel = patientsQuery.getPeselByUID(uid) ?: ""
+                connection.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            pesel
         }
-        return pesel
     }
 
-    private fun checkIfVaccineExists(vaccineName: String): Boolean {
-        var exists = false
-        try {
-            val connection = DBconnection.getConnection()
-            val vaccineQuery = VaccinesQueries(connection)
-            val vaccine = vaccineQuery.getVaccineByName(vaccineName)
-            connection.close()
-            exists = vaccine != null
-        } catch (e: Exception) {
-            e.printStackTrace()
+    private suspend fun checkIfVaccineExists(vaccineName: String): Boolean {
+        return withContext(Dispatchers.IO) {
+            var exists = false
+            try {
+                val connection = DBconnection.getConnection()
+                val vaccineQuery = VaccinesQueries(connection)
+                exists = vaccineQuery.doesVaccineExist(vaccineName)
+                connection.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("ScheduleActivity", "Error checking if vaccine exists", e)
+            }
+            exists
         }
-        return exists
+    }
+
+    private suspend fun getAvailableDoctors(): Int {
+        return withContext(Dispatchers.IO) {
+            var doctorId = 0
+            try {
+                val connection = DBconnection.getConnection()
+                val doctorQuery = DoctorsQueries(connection)
+                val doctors = doctorQuery.getAllDoctors()
+                connection.close()
+
+                if (doctors != null) {
+                    val doctor = doctors.random()
+                    showToast("Doctor: ${doctor?.name} ${doctor?.surname}")
+                    doctorId = doctor?.id ?: 0
+                } else {
+                    showToast("No doctors available")
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            doctorId
+        }
+    }
+
+    private suspend fun getDose(): Int {
+        return withContext(Dispatchers.IO) {
+            val vaccineName = etVaccineName.text.toString()
+            var doseNumber = 0
+            try {
+                val connection = DBconnection.getConnection()
+                val vaccineQuery = VaccinesQueries(connection)
+                val totalDoses = vaccineQuery.getDosesByVaccineName(vaccineName)
+                val appointmentCount = vaccineQuery.getAppointmentsCountForVaccine(vaccineName)
+
+                doseNumber = appointmentCount + 1
+
+                if (doseNumber <= totalDoses) {
+                    showToast("Dose number: $doseNumber / $totalDoses")
+                } else {
+                    showToast("All doses have been administered")
+                }
+                connection.close()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            doseNumber
+        }
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -309,7 +340,10 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
-    private fun showToast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+   private suspend fun showToast(message: String) {
+        withContext(Dispatchers.Main) {
+            Toast.makeText(this@ScheduleActivity, message, Toast.LENGTH_SHORT).show()
+            delay(1000)
+        }
     }
 }

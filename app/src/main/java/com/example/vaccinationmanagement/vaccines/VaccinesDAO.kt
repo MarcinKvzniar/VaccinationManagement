@@ -13,6 +13,8 @@ interface VaccinesDAO {
 
     fun getAppointmentsCountForVaccine(vaccineName: String): Int
 
+    fun doesVaccineExist(vaccineName: String): Boolean
+
     fun getAllVaccines(): Set<Vaccines?>?
 
     fun insertVaccine(vaccine: Vaccines) : Boolean

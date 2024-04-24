@@ -5,11 +5,11 @@ import java.sql.ResultSet
 
 class DoctorsQueries(private val connection: Connection) : DoctorsDAO {
     override fun getDoctorById(id: Int): Doctors? {
-        val query = "{CALL getDoctor(?)}"
-        val callableStatement = connection.prepareCall(query)
-        callableStatement.setInt(1, id)
-        val resultSet = callableStatement.executeQuery()
+        val preparedStatement = connection
+            .prepareStatement("SELECT * FROM Doctors WHERE id = ?")
+        preparedStatement.setInt(1, id)
 
+        val resultSet = preparedStatement.executeQuery()
         return if (resultSet.next()) {
             mapResultSetToDoctor(resultSet)
         } else {
@@ -18,7 +18,7 @@ class DoctorsQueries(private val connection: Connection) : DoctorsDAO {
     }
 
     override fun getAllDoctors(): Set<Doctors?>? {
-        val query = "{CALL getDoctors()}"
+        val query = "{CALL getAllDoctors()}"
         val callableStatement = connection.prepareCall(query)
         val resultSet = callableStatement.executeQuery()
         val doctors = mutableSetOf<Doctors?>()
@@ -29,32 +29,32 @@ class DoctorsQueries(private val connection: Connection) : DoctorsDAO {
     }
 
     override fun insertDoctor(doctor: Doctors): Boolean {
-        val call = "{CALL insertDoctor(?, ?, ?)}"
-        val statement = connection.prepareCall(call)
-        statement.setInt(1, doctor.id)
-        statement.setString(2, doctor.name)
-        statement.setString(3, doctor.surname)
-        val result = !statement.execute()
-        statement.close()
+        val preparedStatement = connection
+            .prepareStatement("INSERT INTO Doctors (name, surname) VALUES (?, ?)")
+        preparedStatement.setString(1, doctor.name)
+        preparedStatement.setString(2, doctor.surname)
+
+        val result = preparedStatement.executeUpdate() > 0
+        preparedStatement.close()
         return result
     }
 
     override fun updateDoctor(id: Int, doctor: Doctors): Boolean {
-        val query = "{CALL updateDoctor(?, ?, ?)}"
-        val callableStatement = connection.prepareCall(query)
-        callableStatement.setInt(1, doctor.id)
-        callableStatement.setString(2, doctor.name)
-        callableStatement.setString(3, doctor.surname)
+        val preparedStatement = connection
+            .prepareStatement("UPDATE Doctors SET name = ?, surname = ? WHERE id = ?")
+        preparedStatement.setString(1, doctor.name)
+        preparedStatement.setString(2, doctor.surname)
+        preparedStatement.setInt(3, id)
 
-        return callableStatement.executeUpdate() > 0
+        return preparedStatement.executeUpdate() > 0
     }
 
     override fun deleteDoctor(id: Int): Boolean {
-        val query = "{CALL deleteDoctor(?)}"
-        val callableStatement = connection.prepareCall(query)
-        callableStatement.setInt(1, id)
+        val preparedStatement = connection
+            .prepareStatement("DELETE FROM Doctors WHERE id = ?")
+        preparedStatement.setInt(1, id)
 
-        return callableStatement.executeUpdate() > 0
+        return preparedStatement.executeUpdate() > 0
     }
 
     private fun mapResultSetToDoctor(resultSet: ResultSet): Doctors {

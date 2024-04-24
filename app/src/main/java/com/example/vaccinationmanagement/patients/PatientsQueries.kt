@@ -18,13 +18,13 @@ class PatientsQueries(private val connection : Connection) : PatientsDAO {
     }
 
     override fun getPeselByUID(uid: String?): String? {
-        val preparedStatement = connection
-            .prepareStatement("SELECT pesel FROM Patients WHERE uid = ?")
-        preparedStatement.setString(1, uid)
+        val query = "{CALL getPeselByUID(?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setString(1, uid)
+        val resultSet = callableStatement.executeQuery()
 
-        val resultSet = preparedStatement.executeQuery()
         return if (resultSet.next()) {
-            resultSet.getString(1)
+            resultSet.getString("pesel")
         } else {
             null
         }
