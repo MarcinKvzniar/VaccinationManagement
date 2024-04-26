@@ -6,7 +6,7 @@
     android:id="@+id/home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_auth_activities"
+    android:background="@drawable/back_app2"
     tools:context=".activities.HomeActivity">
 
     <TextView
@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:gravity="center"
+        android:background="@drawable/text_in_frame"
         android:text="Vaccination App"
         android:textColor="@color/black"
         android:textSize="30sp"
@@ -79,6 +80,7 @@
         android:gravity="center"
         android:text="NOTIFICATIONS"
         android:textSize="18sp"
+        android:background="@drawable/bg_input"
 
         app:layout_constraintEnd_toEndOf="@id/btnHistory"
         app:layout_constraintStart_toStartOf="@id/btnHistory"
