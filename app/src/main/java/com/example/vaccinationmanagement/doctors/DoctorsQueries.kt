@@ -5,11 +5,11 @@ import java.sql.ResultSet
 
 class DoctorsQueries(private val connection: Connection) : DoctorsDAO {
     override fun getDoctorById(id: Int): Doctors? {
-        val preparedStatement = connection
-            .prepareStatement("SELECT * FROM Doctors WHERE id = ?")
-        preparedStatement.setInt(1, id)
+        val query = "{CALL getDoctorById(?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setInt(1, id)
+        val resultSet = callableStatement.executeQuery()
 
-        val resultSet = preparedStatement.executeQuery()
         return if (resultSet.next()) {
             mapResultSetToDoctor(resultSet)
         } else {
