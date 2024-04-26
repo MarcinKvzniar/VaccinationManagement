@@ -6,16 +6,17 @@
     android:id="@+id/home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_auth_activities"
+    android:background="@drawable/back_app"
     tools:context=".activities.HomeActivity">
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+        android:layout_width="246dp"
+        android:layout_height="46dp"
+        android:background="@drawable/text_in_frame"
         android:gravity="center"
         android:text="Vaccination App"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -28,13 +29,14 @@
 
     <Button
         android:id="@+id/btnAccount"
-        android:layout_width="200dp"
-        android:layout_height="75dp"
+        android:layout_width="193dp"
+        android:layout_height="64dp"
         android:layout_marginTop="30dp"
-        android:gravity="center"
         android:background="@drawable/bg_input"
         android:drawableLeft="@drawable/ic_person"
+        android:gravity="center"
         android:text="ACCOUNT"
+        android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/textView"
         app:layout_constraintStart_toStartOf="@+id/textView"
@@ -43,12 +45,12 @@
 
     <Button
         android:id="@+id/btnSchedule"
-        android:layout_width="200dp"
-        android:layout_height="75dp"
+        android:layout_width="193dp"
+        android:layout_height="64dp"
         android:layout_marginTop="30dp"
-        android:gravity="center"
         android:background="@drawable/bg_input"
         android:drawableLeft="@drawable/ic_history"
+        android:gravity="center"
         android:text="SCHEDULE"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="@+id/btnAccount"
@@ -58,12 +60,12 @@
 
     <Button
         android:id="@+id/btnHistory"
-        android:layout_width="200dp"
-        android:layout_height="75dp"
+        android:layout_width="203dp"
+        android:layout_height="64dp"
         android:layout_marginTop="30dp"
-        android:gravity="center"
         android:background="@drawable/bg_input"
         android:drawableLeft="@drawable/ic_calendar"
+        android:gravity="center"
         android:text="VACCINATION CALENDAR"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/btnSchedule"
@@ -73,8 +75,8 @@
 
     <Button
         android:id="@+id/btnNotifications"
-        android:layout_width="200dp"
-        android:layout_height="75dp"
+        android:layout_width="193dp"
+        android:layout_height="64dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
         android:background="@drawable/bg_input"
@@ -89,9 +91,9 @@
 
     <Button
         android:id="@+id/btnLogOut"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_input"
+        android:layout_width="153dp"
+        android:layout_height="61dp"
+        android:background="@drawable/more_serious_design_button"
         android:drawableLeft="@drawable/ic_logout"
         android:text="Log out"
         android:textSize="20sp"

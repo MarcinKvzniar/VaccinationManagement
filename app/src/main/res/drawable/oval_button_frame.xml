@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <shape xmlns:android="http://schemas.android.com/apk/res/android">
+        <solid android:color="#756603F6"/> <!-- Light pink-blue color -->
+        <corners android:radius="100dp" /> <!-- This makes the button oval -->
+        <stroke android:color="#000000" android:width="4dp"/> <!-- Black border -->
+    </shape>

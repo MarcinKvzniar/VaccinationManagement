@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.authentication.LoginActivity"
-    android:background="@drawable/bg_auth_activities"
+    android:background="@drawable/login_wallpaper"
     >
 
 
@@ -35,6 +35,7 @@
         android:background="@drawable/bg_input"
         android:drawableStart="@drawable/ic_email"
         android:drawablePadding="10dp"
+        android:textSize="22sp"
         android:ems="10"
         android:hint="E-mail"
         android:inputType="text"
@@ -59,6 +60,7 @@
         android:drawableLeft="@drawable/ic_security"
         android:drawablePadding="10dp"
         android:ems="10"
+        android:textSize="22sp"
         android:hint="Password"
         android:inputType="textPassword"
         android:paddingLeft="20dp"
@@ -66,7 +68,6 @@
         android:paddingRight="20dp"
         android:paddingBottom="10dp"
         android:textColor="@color/black"
-        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/inputEmailLog"
         app:layout_constraintStart_toStartOf="@+id/inputEmailLog"
         app:layout_constraintTop_toBottomOf="@+id/inputEmailLog"
@@ -82,6 +83,7 @@
         android:drawableEnd="@drawable/ic_password_peek"
         android:drawablePadding="10dp"
         android:text="Show Password"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/btnLogin"
         app:layout_constraintEnd_toEndOf="@+id/inputPasswordLog"
         app:layout_constraintHorizontal_bias="0.496"
@@ -93,12 +95,12 @@
         android:id="@+id/btnLogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="52dp"
-        android:backgroundTint="@color/darkBlue"
+        android:layout_marginTop="72dp"
+        android:background="@drawable/more_serious_design_button"
         android:gravity="center"
         android:text="Login"
         android:textAlignment="center"
-        android:textSize="18sp"
+        android:textSize="23sp"
         app:layout_constraintEnd_toEndOf="@+id/inputPasswordLog"
         app:layout_constraintStart_toStartOf="@+id/inputPasswordLog"
         app:layout_constraintTop_toBottomOf="@+id/showPassword"
@@ -106,13 +108,12 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_width="325dp"
+        android:layout_height="35dp"
         android:layout_marginTop="64dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="@+id/btnLogin"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/btnLogin"
         app:layout_constraintTop_toBottomOf="@+id/btnLogin">
 
@@ -120,6 +121,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingRight="10dp"
+            android:textSize="20dp"
             android:text="Don't have an Account?"
             android:textColor="@color/black"
             tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
@@ -129,6 +131,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Sign Up"
+            android:textSize="20dp"
             android:textColor="@color/red"
             tools:ignore="HardcodedText" />
     </LinearLayout>
