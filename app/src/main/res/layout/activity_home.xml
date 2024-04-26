@@ -77,6 +77,8 @@
         android:layout_height="75dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
+        android:background="@drawable/bg_input"
+        android:drawableLeft="@drawable/ic_notification"
         android:text="NOTIFICATIONS"
         android:textSize="16sp"
 
