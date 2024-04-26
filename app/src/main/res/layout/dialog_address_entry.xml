@@ -6,16 +6,22 @@
 
     <EditText
         android:id="@+id/etAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter Address"/>
+        android:layout_width="383dp"
+        android:layout_height="53dp"
+        android:background="@drawable/text_in_frame"
+        android:hint="Enter Address"
+        android:textColor="@color/black"
+        android:textColorHint="@color/black" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSaveAddress"
-        android:layout_width="wrap_content"
+        android:layout_width="131dp"
         android:layout_height="wrap_content"
-        android:text="Save Address"
         android:layout_below="@id/etAddress"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:background="@drawable/more_serious_design_button"
+        android:text="Save Address"
+        android:textAllCaps="false"
+        android:textColor="@color/black" />
 
 </RelativeLayout>

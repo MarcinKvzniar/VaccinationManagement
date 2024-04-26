@@ -11,12 +11,15 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnSetDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/datePicker"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Set Date" />
+        android:background="@drawable/more_serious_design_button"
+        android:text="Set Date"
+        android:textAllCaps="false"
+        android:textColor="@color/black" />
 </RelativeLayout>

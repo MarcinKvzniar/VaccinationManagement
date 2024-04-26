@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_auth_activities"
+    android:background="@drawable/back_blue_light"
     tools:context=".activities.ScheduleActivity">
 
     <TextView
@@ -16,6 +16,7 @@
         android:text="SCHEDULE VACCINE"
         android:textSize="25sp"
         android:textStyle="bold"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -28,6 +29,9 @@
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:hint="Vaccine Name"
+        android:textColor="@color/white"
+        android:textColorHint="@color/white"
+        android:background="@drawable/text_in_frame"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
@@ -36,51 +40,61 @@
         app:layout_constraintVertical_bias="0.089"
         tools:ignore="HardcodedText" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnDatePicker"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_width="166dp"
+        android:layout_height="59dp"
         android:layout_marginTop="30dp"
+        android:background="@drawable/oval_button_frame"
         android:gravity="center"
         android:text="Set Date"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/etVaccineName"
         app:layout_constraintHorizontal_bias="0.482"
         app:layout_constraintStart_toStartOf="@+id/etVaccineName"
         app:layout_constraintTop_toBottomOf="@+id/etVaccineName"
         tools:ignore="HardcodedText" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnTimePicker"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_width="166dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/oval_button_frame"
         android:gravity="center"
         android:text="Set Time"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btnDatePicker"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.477"
         app:layout_constraintStart_toStartOf="@+id/btnDatePicker"
         app:layout_constraintTop_toBottomOf="@+id/btnDatePicker"
+        app:layout_constraintVertical_bias="0.004"
         tools:ignore="HardcodedText" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnEnterAddress"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_width="166dp"
+        android:layout_height="59dp"
+        android:layout_marginTop="28dp"
+        android:background="@drawable/oval_button_frame"
         android:gravity="center"
         android:text="Enter Address"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@+id/btnTimePicker"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.479"
         app:layout_constraintStart_toStartOf="@+id/btnTimePicker"
         app:layout_constraintTop_toBottomOf="@+id/btnTimePicker"
         tools:ignore="HardcodedText" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGetTheDoctor"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_width="166dp"
+        android:layout_height="59dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@drawable/oval_button_frame"
         android:text="Get Available Doctors"
         app:layout_constraintEnd_toEndOf="@+id/btnEnterAddress"
         app:layout_constraintHorizontal_bias="0.0"
@@ -88,12 +102,14 @@
         app:layout_constraintTop_toBottomOf="@+id/btnEnterAddress"
         tools:ignore="HardcodedText" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGetDose"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_width="166dp"
+        android:layout_height="59dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@drawable/oval_button_frame"
         android:text="Get Dose"
         app:layout_constraintEnd_toEndOf="@+id/btnGetTheDoctor"
         app:layout_constraintHorizontal_bias="0.0"
@@ -101,22 +117,23 @@
         app:layout_constraintTop_toBottomOf="@+id/btnGetTheDoctor"
         tools:ignore="HardcodedText" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnScheduleAppointment"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_width="218dp"
+        android:layout_height="63dp"
         android:layout_marginStart="108dp"
         android:layout_marginTop="64dp"
+        android:backgroundTint="#7C0047FA"
         android:gravity="center"
         android:text="Schedule Appointment"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/btnGetDose"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.818"
         app:layout_constraintStart_toStartOf="@+id/btnGetDose"
         app:layout_constraintTop_toBottomOf="@+id/btnGetDose"
+        app:layout_constraintVertical_bias="0.0"
         tools:ignore="HardcodedText" />
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
