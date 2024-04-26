@@ -5,13 +5,13 @@
     android:id="@+id/historyActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_auth_activities"
+    android:background="@drawable/back_app"
     tools:context=".activities.history.HistoryActivity">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/historyRecyclerView"
-        android:layout_width="413dp"
-        android:layout_height="541dp"
+        android:layout_width="341dp"
+        android:layout_height="457dp"
         android:layout_marginStart="1dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="1dp"
@@ -20,7 +20,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.323" />
+        app:layout_constraintVertical_bias="0.207" />
+
+
 
     <TextView
         android:id="@+id/textView"
@@ -48,7 +50,7 @@
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/historyRecyclerView"
-        app:layout_constraintVertical_bias="0.706"
+        app:layout_constraintVertical_bias="0.51" />
         tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
