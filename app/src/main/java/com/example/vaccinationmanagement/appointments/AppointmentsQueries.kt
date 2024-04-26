@@ -5,7 +5,6 @@ import java.sql.ResultSet
 
 class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO {
 
-    // Retrieves an appointment by id from the database
     override fun getAppointmentById(id: Int): Appointments? {
         val query = "{CALL getAppointment(?)}"
         val callableStatement = connection.prepareCall(query)
@@ -19,9 +18,8 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
         }
     }
 
-    // Retrieves all appointments from the database
     override fun getAllAppointments(): Set<Appointments?>? {
-        val query = "{CALL getAppointments()}"
+        val query = "{CALL getAllAppointments()}"
         val callableStatement = connection.prepareCall(query)
         val resultSet = callableStatement.executeQuery()
         val appointments = mutableSetOf<Appointments?>()
@@ -31,7 +29,6 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
         return if (appointments.isEmpty()) null else appointments
     }
 
-    // Inserts a new appointment into the database
     override fun insertAppointment(appointment: Appointments): Boolean {
         val call = "{CALL insertAppointment(?, ?, ?, ?, ?, ?, ?)}"
         val statement = connection.prepareCall(call)
@@ -49,7 +46,6 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
         return result
     }
 
-    // Updates an existing appointment in the database
     override fun updateAppointment(id: Int, appointment: Appointments): Boolean {
         val query = "{CALL updateAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
         val callableStatement = connection.prepareCall(query)
@@ -65,7 +61,6 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
         return callableStatement.executeUpdate() > 0
     }
 
-    // Deletes an appointment from the database
     override fun deleteAppointment(id: Int): Boolean {
         val query = "{CALL deleteAppointment(?)}"
         val callableStatement = connection.prepareCall(query)
@@ -74,8 +69,6 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
         return callableStatement.executeUpdate() > 0
     }
 
-
-    // Maps a ResultSet row to an Appointment object
     private fun mapResultSetToAppointment(resultSet: ResultSet): Appointments {
         return Appointments(
             id = resultSet.getInt("id"),

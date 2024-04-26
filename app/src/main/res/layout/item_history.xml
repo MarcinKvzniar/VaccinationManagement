@@ -101,11 +101,11 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/tvDoctorId"
+            android:id="@+id/tvDoctor"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="Doctor ID"
+            android:text="Doctor"
             android:textColor="#000000"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/tvCurrentDose"

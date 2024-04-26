@@ -79,13 +79,15 @@
         android:layout_height="64dp"
         android:layout_marginTop="30dp"
         android:gravity="center"
-        android:text="NOTIFICATIONS"
-        android:textSize="18sp"
         android:background="@drawable/bg_input"
+        android:drawableLeft="@drawable/ic_notification"
+        android:text="NOTIFICATIONS"
+        android:textSize="16sp"
+
         app:layout_constraintEnd_toEndOf="@id/btnHistory"
         app:layout_constraintStart_toStartOf="@id/btnHistory"
         app:layout_constraintTop_toBottomOf="@+id/btnHistory"
-        tools:ignore="HardcodedText" />
+        tools:ignore="HardcodedText,RtlHardcoded" />
 
     <Button
         android:id="@+id/btnLogOut"

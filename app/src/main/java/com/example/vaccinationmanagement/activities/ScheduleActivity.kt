@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.widget.Button
 import android.widget.DatePicker
@@ -15,7 +13,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.vaccinationmanagement.R
-import com.example.vaccinationmanagement.activities.authentication.LoginActivity
 import com.example.vaccinationmanagement.appointments.Appointments
 import com.example.vaccinationmanagement.appointments.AppointmentsQueries
 import com.example.vaccinationmanagement.dbConfig.DBconnection
@@ -167,7 +164,7 @@ class ScheduleActivity : AppCompatActivity() {
         val vaccineId = getVaccineIdByVaccineName(vaccineName)
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         val pesel = getPatientPesel(uid)
-        val doctorId = 1 // TODO implement getAvailableDoctors()
+        val doctorId = getAvailableDoctors()
 
         val date = Date.valueOf(dateString)
         if (!isDateValid(dateString)) {
@@ -269,8 +266,11 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private suspend fun getAvailableDoctors(): Int {
-        return withContext(Dispatchers.IO) {
-            var doctorId = 0
+        var doctorId = 0
+        var doctorName: String? = null
+        var doctorSurname: String? = null
+
+        withContext(Dispatchers.IO) {
             try {
                 val connection = DBconnection.getConnection()
                 val doctorQuery = DoctorsQueries(connection)
@@ -279,16 +279,22 @@ class ScheduleActivity : AppCompatActivity() {
 
                 if (doctors != null) {
                     val doctor = doctors.random()
-                    showToast("Doctor: ${doctor?.name} ${doctor?.surname}")
+                    doctorName = doctor?.name
+                    doctorSurname = doctor?.surname
                     doctorId = doctor?.id ?: 0
-                } else {
-                    showToast("No doctors available")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-            doctorId
         }
+
+        if (doctorName != null && doctorSurname != null) {
+            showToast("Doctor: $doctorName $doctorSurname")
+        } else {
+            showToast("No doctors available")
+        }
+
+        return doctorId
     }
 
     private suspend fun getDose(): Int {

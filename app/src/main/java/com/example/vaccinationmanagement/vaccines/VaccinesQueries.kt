@@ -5,11 +5,11 @@ import java.sql.ResultSet
 
 class VaccinesQueries(private val connection : Connection) : VaccinesDAO {
     override fun getVaccineById(id: Int): Vaccines? {
-        val preparedStatement = connection
-            .prepareStatement("SELECT * FROM Vaccines WHERE id = ?")
-        preparedStatement.setInt(1, id)
+        val query = "{CALL getVaccineById(?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setInt(1, id)
+        val resultSet = callableStatement.executeQuery()
 
-        val resultSet = preparedStatement.executeQuery()
         return if (resultSet.next()) {
             mapResultSetToVaccine(resultSet)
         } else {
