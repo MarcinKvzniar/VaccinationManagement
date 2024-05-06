@@ -47,16 +47,11 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
     }
 
     override fun updateAppointment(id: Int, appointment: Appointments): Boolean {
-        val query = "{CALL updateAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
+        val query = "{CALL updateAppointment(?, ?, ?)}"
         val callableStatement = connection.prepareCall(query)
-        callableStatement.setInt(1, id)
-        callableStatement.setInt(2, appointment.vaccineId)
-        callableStatement.setString(3, appointment.pesel)
-        callableStatement.setInt(4, appointment.doctorId)
-        callableStatement.setDate(5, appointment.date)
-        callableStatement.setTime(6, appointment.time)
-        callableStatement.setString(7, appointment.address)
-        callableStatement.setInt(8, appointment.dose)
+        callableStatement.setDate(1, appointment.date)
+        callableStatement.setTime(2, appointment.time)
+        callableStatement.setString(3, appointment.address)
 
         return callableStatement.executeUpdate() > 0
     }

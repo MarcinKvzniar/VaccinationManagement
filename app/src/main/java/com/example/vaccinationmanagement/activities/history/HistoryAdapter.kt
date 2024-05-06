@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vaccinationmanagement.R
@@ -18,6 +19,8 @@ class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>)
         val textAddress: TextView = itemView.findViewById(R.id.tvAddressItem)
         val textDose: TextView = itemView.findViewById(R.id.tvCurrentDose)
         val textDoctor: TextView = itemView.findViewById(R.id.tvDoctor)
+        val btnUpdate: Button = itemView.findViewById(R.id.btnUpdate)
+        val btnDelete: Button = itemView.findViewById(R.id.btnDelete)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -35,6 +38,14 @@ class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>)
         holder.textAddress.text = vaccination.address
         holder.textDoctor.text = "Doctor: ${vaccination.doctorName} ${vaccination.doctorSurname}"
         holder.textDose.text = "Dose: ${vaccination.dose}"
+
+//        holder.btnUpdate.setOnClickListener {
+//            (it.context as HistoryActivity).updateAppointment(vaccination)
+//        }
+//
+//        holder.btnDelete.setOnClickListener {
+//            (it.context as HistoryActivity).deleteAppointment(vaccination)
+//        }
     }
 
     override fun getItemCount(): Int {
