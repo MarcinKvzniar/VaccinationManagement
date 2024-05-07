@@ -1,5 +1,6 @@
 package com.example.vaccinationmanagement.activities
 
+import com.example.vaccinationmanagement.activities.notifications.NotificationActivity
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -49,7 +50,10 @@ class HomeActivity : AppCompatActivity() {
         }
 
         btnNotifications.setOnClickListener {
-            userNotificationService.scheduleNotifications()
+           startActivity(
+               Intent(this@HomeActivity,
+                NotificationActivity::class.java)
+           )
         }
 
     }
