@@ -14,7 +14,7 @@
         <TextView
             android:id="@+id/tvAddressItem"
             android:layout_width="0dp"
-            android:layout_height="27dp"
+            android:layout_height="50dp"
             android:layout_marginEnd="34dp"
             android:gravity="center"
             android:text="Address"
@@ -29,14 +29,28 @@
         <TextView
             android:id="@+id/tvTimeItem"
             android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="32dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="10dp"
             android:gravity="center"
             android:text="Time"
             android:textColor="#000000"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.442" />
+
+        <TextView
+            android:id="@+id/tvDateItem"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="10dp"
+            android:gravity="center"
+            android:text="Date"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tvVaccineNameItem"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.442" />
 
@@ -53,24 +67,10 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.238"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.102" />
-
-        <TextView
-            android:id="@+id/tvDateItem"
-            android:layout_width="80dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="20dp"
-            android:gravity="center"
-            android:text="Date"
-            android:textColor="#000000"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/tvVaccineNameItem"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.442" />
 
         <ImageView
             android:id="@+id/imageView"

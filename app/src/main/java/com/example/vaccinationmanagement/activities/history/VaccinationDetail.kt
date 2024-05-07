@@ -9,9 +9,9 @@ data class VaccinationDetail(
     val pesel: String,
     val doctorName: String,
     val doctorSurname: String,
-    val date: Date,
-    val time: Time,
-    val address: String,
+    var date: Date,
+    var time: Time,
+    var address: String,
     val dose: Int,
     val vaccineName: String
 )

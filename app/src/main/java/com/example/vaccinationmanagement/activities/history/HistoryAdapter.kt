@@ -12,6 +12,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.view.children
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.vaccinationmanagement.R
@@ -25,8 +26,9 @@ import java.sql.Date
 import java.sql.Time
 import java.text.SimpleDateFormat
 
-class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>)
-    : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
+
+    private val TEXTSIZE = 14f
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textVaccineName: TextView = itemView.findViewById(R.id.tvVaccineNameItem)
@@ -55,131 +57,104 @@ class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>)
         holder.textDoctor.text = "Doctor: ${vaccination.doctorName} ${vaccination.doctorSurname}"
         holder.textDose.text = "Dose: ${vaccination.dose}"
 
+        var lastTouchDown = 0L
+
         // Updating the date of the vaccination
-        holder.textDate.setOnTouchListener(object : View.OnTouchListener {
-            private var lastTouchDown: Long = 0
+        holder.textDate.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastTouchDown < ViewConfiguration.getDoubleTapTimeout()) {
+                    val editText = EditText(v.context)
+                    editText.setText((v as TextView).text)
+                    editText.textSize = TEXTSIZE
+                    editText.layoutParams = v.layoutParams
+                    (v.parent as ViewGroup).addView(editText)
+                    v.visibility = View.GONE
 
-            @SuppressLint("ClickableViewAccessibility")
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        val currentTime = System.currentTimeMillis()
-                        if (currentTime - lastTouchDown < ViewConfiguration.getDoubleTapTimeout()) {
-                            val editText = EditText(v.context)
-                            editText.setText((v as TextView).text)
-                            (v.parent as ViewGroup).addView(editText)
-                            v.visibility = View.GONE
-
-                            editText.setOnEditorActionListener { _, actionId, _ ->
-                                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                                    val newDate = editText.text.toString()
-                                    if (isDateValid(newDate)) {
-                                        v.text = newDate
-                                        v.visibility = View.VISIBLE
-                                        (v.parent as ViewGroup).removeView(editText)
-                                    } else {
-                                        Toast
-                                            .makeText(
-                                                v.context,
-                                                "Invalid date format",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
-                                    }
-                                    true
-                                } else {
-                                    false
-                                }
+                    editText.setOnFocusChangeListener { _, hasFocus ->
+                        if (!hasFocus) {
+                            if (isDateValid(editText.text.toString())) {
+                                v.text = editText.text
+                            } else {
+                                Toast.makeText(v.context, "Invalid date format", Toast.LENGTH_SHORT).show()
                             }
+                            v.visibility = View.VISIBLE
+                            (v.parent as ViewGroup).removeView(editText)
                         }
-                        lastTouchDown = currentTime
                     }
                 }
-                return true
+                lastTouchDown = currentTime
             }
-        })
+            true
+        }
 
         // Updating the time of the vaccination
-        holder.textTime.setOnTouchListener(object : View.OnTouchListener {
-            private var lastTouchDown: Long = 0
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        val currentTime = System.currentTimeMillis()
+        holder.textTime.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastTouchDown < ViewConfiguration.getDoubleTapTimeout()) {
+                    val editText = EditText(v.context)
+                    editText.setText((v as TextView).text)
+                    editText.textSize = TEXTSIZE
+                    editText.layoutParams = v.layoutParams
+                    (v.parent as ViewGroup).addView(editText)
+                    v.visibility = View.GONE
 
-                        if (currentTime - lastTouchDown < ViewConfiguration.getDoubleTapTimeout()) {
-                            val editText = EditText(v.context)
-                            editText.setText((v as TextView).text)
-                            (v.parent as ViewGroup).addView(editText)
-                            v.visibility = View.GONE
-
-                            editText.setOnEditorActionListener { _, actionId, _ ->
-                                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                                    val newTime = editText.text.toString()
-                                    if (isTimeValid(newTime)) {
-                                        v.text = newTime
-                                        v.visibility = View.VISIBLE
-                                        (v.parent as ViewGroup).removeView(editText)
-                                    } else {
-                                        Toast
-                                            .makeText(
-                                                v.context,
-                                                "Invalid time format",
-                                                Toast.LENGTH_SHORT
-                                            )
-                                            .show()
-                                    }
-                                    true
-                                } else {
-                                    false
-                                }
+                    editText.setOnFocusChangeListener { _, hasFocus ->
+                        if (!hasFocus) {
+                            if (isTimeValid(editText.text.toString())) {
+                                v.text = editText.text
+                            } else {
+                                Toast.makeText(v.context, "Invalid time format", Toast.LENGTH_SHORT).show()
                             }
+                            v.visibility = View.VISIBLE
+                            (v.parent as ViewGroup).removeView(editText)
                         }
-                        lastTouchDown = currentTime
                     }
                 }
-                return true
+                lastTouchDown = currentTime
             }
-        })
+            true
+        }
 
         // Updating the address of the vaccination
-        holder.textAddress.setOnTouchListener(object : View.OnTouchListener {
-            private var lastTouchDown: Long = 0
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-                        val currentTime = System.currentTimeMillis()
-                        if (currentTime - lastTouchDown < ViewConfiguration.getDoubleTapTimeout()) {
+        holder.textAddress.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_DOWN) {
+                val currentTime = System.currentTimeMillis()
+                if (currentTime - lastTouchDown < ViewConfiguration.getDoubleTapTimeout()) {
+                    val editText = EditText(v.context)
+                    editText.setText((v as TextView).text)
+                    editText.textSize = TEXTSIZE
+                    editText.layoutParams = v.layoutParams
+                    (v.parent as ViewGroup).addView(editText)
+                    v.visibility = View.GONE
 
-                            val editText = EditText(v.context)
-                            editText.setText((v as TextView).text)
-                            (v.parent as ViewGroup).addView(editText)
-                            v.visibility = View.GONE
-
-                            editText.setOnEditorActionListener { _, actionId, _ ->
-                                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                                    v.text = editText.text
-                                    v.visibility = View.VISIBLE
-                                    (v.parent as ViewGroup).removeView(editText)
-                                    true
-                                } else {
-                                    false
-                                }
-                            }
+                    editText.setOnFocusChangeListener { _, hasFocus ->
+                        if (!hasFocus) {
+                            v.text = editText.text
+                            v.visibility = View.VISIBLE
+                            (v.parent as ViewGroup).removeView(editText)
                         }
-                        lastTouchDown = currentTime
                     }
                 }
-                return true
+                lastTouchDown = currentTime
             }
-        })
+            true
+        }
 
         holder.btnUpdate.setOnClickListener {
-            Log.d("HistoryAdapter", "Update button clicked")
+            val editTextDate = (holder.textDate.parent as ViewGroup).children.find { it is EditText }
+            val editTextTime = (holder.textTime.parent as ViewGroup).children.find { it is EditText }
+            val editTextAddress = (holder.textAddress.parent as ViewGroup).children.find { it is EditText }
+
+            editTextDate?.clearFocus()
+            editTextTime?.clearFocus()
+            editTextAddress?.clearFocus()
+
             (holder.itemView.context as HistoryActivity).lifecycleScope.launch {
                 val doctorId = getDoctorId(vaccination.doctorName, vaccination.doctorSurname)
                 val updatedAppointment = Appointments(
-                    id = vaccination.vaccineId,
+                    id = vaccination.id,
                     vaccineId = vaccination.vaccineId,
                     pesel = vaccination.pesel,
                     doctorId = doctorId,

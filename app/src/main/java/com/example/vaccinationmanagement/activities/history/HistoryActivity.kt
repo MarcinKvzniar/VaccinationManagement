@@ -1,11 +1,9 @@
 package com.example.vaccinationmanagement.activities.history
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -24,8 +22,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.sql.Date
-import java.sql.Time
+import java.text.SimpleDateFormat
 
 class HistoryActivity : AppCompatActivity() {
 
@@ -68,19 +65,19 @@ class HistoryActivity : AppCompatActivity() {
                 val appointments = appointmentQuery.getAllAppointments()
                 appointments?.forEach { appointment ->
                     if (appointment?.pesel == currentUserPesel) {
-                        val vaccine = vaccineQuery.getVaccineById(appointment?.vaccineId ?: 0)
-                        val doctor = doctorQuery.getDoctorById(appointment?.doctorId ?: 0)
+                        val vaccine = vaccineQuery.getVaccineById(appointment.vaccineId)
+                        val doctor = doctorQuery.getDoctorById(appointment.doctorId)
                         if (vaccine != null && doctor != null) {
                             val vaccinationDetail = VaccinationDetail(
-                                id = appointment?.id ?: 0,
-                                vaccineId = appointment?.vaccineId ?: 0,
-                                pesel = appointment?.pesel ?: "",
+                                id = appointment.id ?: 0,
+                                vaccineId = appointment.vaccineId,
+                                pesel = appointment.pesel,
                                 doctorName = doctor.name,
                                 doctorSurname = doctor.surname,
-                                date = appointment?.date ?: Date(java.util.Date().time),
-                                time = appointment?.time ?: Time(0),
-                                address = appointment?.address ?: "",
-                                dose = appointment?.dose ?: 0,
+                                date = appointment.date,
+                                time = appointment.time,
+                                address = appointment.address,
+                                dose = appointment.dose,
                                 vaccineName = vaccine.vaccineName
                             )
                             vaccinationList.add(vaccinationDetail)
@@ -121,16 +118,43 @@ class HistoryActivity : AppCompatActivity() {
         }
     }
 
+
+    @SuppressLint("NotifyDataSetChanged")
     suspend fun updateAppointment(updatedAppointment: Appointments) {
         withContext(Dispatchers.IO) {
             try {
                 val connection = DBconnection.getConnection()
                 val appointmentQuery = AppointmentsQueries(connection)
 
-                val result = appointmentQuery.updateAppointment(updatedAppointment.id ?: 0, updatedAppointment)
+                if (!isDateValid(updatedAppointment.date.toString())) {
+                    showCoroutineToast("Invalid date format")
+                    return@withContext
+                }
+
+                if (!isTimeValid(updatedAppointment.time.toString())) {
+                    showCoroutineToast("Invalid time format")
+                    return@withContext
+                }
+
+                if (updatedAppointment.address.isEmpty()) {
+                    showCoroutineToast("Address cannot be empty")
+                    return@withContext
+                }
+
+                val result = appointmentQuery
+                    .updateAppointment(updatedAppointment.id ?: 0, updatedAppointment)
 
                 if (!result) {
                     showCoroutineToast("Failed to update appointment")
+                } else {
+                    val updatedVaccination = vaccinationList.find { it.id == updatedAppointment.id }
+                    updatedVaccination?.date = updatedAppointment.date
+                    updatedVaccination?.time = updatedAppointment.time
+                    updatedVaccination?.address = updatedAppointment.address
+                    withContext(Dispatchers.Main) {
+                        historyAdapter.notifyDataSetChanged()
+                    }
+                    showCoroutineToast("Appointment updated successfully")
                 }
                 connection.close()
             } catch (e: Exception) {
@@ -167,6 +191,30 @@ class HistoryActivity : AppCompatActivity() {
         withContext(Dispatchers.Main) {
             Toast.makeText(this@HistoryActivity, message, Toast.LENGTH_SHORT).show()
             delay(1000)
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun isDateValid(date: String): Boolean {
+        val format = SimpleDateFormat("yyyy-MM-dd")
+        format.isLenient = false
+        return try {
+            format.parse(date)
+            true
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun isTimeValid(time: String): Boolean {
+        val format = SimpleDateFormat("HH:mm")
+        format.isLenient = false
+        return try {
+            format.parse(time)
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 
