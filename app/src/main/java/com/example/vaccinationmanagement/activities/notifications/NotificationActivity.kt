@@ -1,7 +1,9 @@
 package com.example.vaccinationmanagement.activities.notifications
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.DatePickerDialog
+import android.app.PendingIntent
 import android.app.TimePickerDialog
 import android.os.Bundle
 import android.util.Log
@@ -21,6 +23,11 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.sql.Date
 import java.sql.Time
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -140,9 +147,25 @@ class NotificationActivity : AppCompatActivity() {
         val vaccineId = getVaccineIdByVaccineName(vaccineName)
 
         val uid = FirebaseAuth.getInstance().currentUser?.uid
-
-        // Insert the notification into the database
         insertNotificationIntoDB(vaccineId, uid!!, date, time)
+        // Schedule the alarm
+        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(this, ReminderBroadcastReceiver::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+
+        // Parse the date and time of the appointment
+        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        val appointmentDate = format.parse("$date $time")
+
+        // Schedule the alarm
+        if (appointmentDate != null) {
+            alarmManager.setExact(
+                AlarmManager.RTC_WAKEUP,
+                appointmentDate.time,
+                pendingIntent
+            )
+        }
+
     }
 
     private suspend fun insertNotificationIntoDB(vaccineId: Int, uid: String, date: String, time: String) {
