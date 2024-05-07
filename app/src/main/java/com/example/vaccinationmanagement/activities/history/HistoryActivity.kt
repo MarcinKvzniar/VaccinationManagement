@@ -17,7 +17,9 @@ import com.example.vaccinationmanagement.appointments.Appointments
 import com.example.vaccinationmanagement.appointments.AppointmentsQueries
 import com.example.vaccinationmanagement.dbConfig.DBconnection
 import com.example.vaccinationmanagement.doctors.DoctorsQueries
+import com.example.vaccinationmanagement.patients.PatientsQueries
 import com.example.vaccinationmanagement.vaccines.VaccinesQueries
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -55,7 +57,7 @@ class HistoryActivity : AppCompatActivity() {
         fetchVaccinationData()
     }
 
-    private suspend fun fetchVaccinationDataFromDB(): MutableList<VaccinationDetail> {
+    private suspend fun fetchVaccinationDataFromDB(currentUserPesel: String): MutableList<VaccinationDetail> {
         withContext(Dispatchers.IO) {
             try {
                 val connection = DBconnection.getConnection()
@@ -65,21 +67,24 @@ class HistoryActivity : AppCompatActivity() {
 
                 val appointments = appointmentQuery.getAllAppointments()
                 appointments?.forEach { appointment ->
-                    val vaccine = vaccineQuery.getVaccineById(appointment?.vaccineId ?: 0)
-                    val doctor = doctorQuery.getDoctorById(appointment?.doctorId ?: 0)
-                    if (vaccine != null && doctor != null) {
-                        val vaccinationDetail = VaccinationDetail(
-                            vaccineId = appointment?.vaccineId ?: 0,
-                            pesel = appointment?.pesel ?: "",
-                            doctorName = doctor.name,
-                            doctorSurname = doctor.surname,
-                            date = appointment?.date ?: Date(java.util.Date().time),
-                            time = appointment?.time ?: Time(0),
-                            address = appointment?.address ?: "",
-                            dose = appointment?.dose ?: 0,
-                            vaccineName = vaccine.vaccineName
-                        )
-                        vaccinationList.add(vaccinationDetail)
+                    if (appointment?.pesel == currentUserPesel) {
+                        val vaccine = vaccineQuery.getVaccineById(appointment?.vaccineId ?: 0)
+                        val doctor = doctorQuery.getDoctorById(appointment?.doctorId ?: 0)
+                        if (vaccine != null && doctor != null) {
+                            val vaccinationDetail = VaccinationDetail(
+                                id = appointment?.id ?: 0,
+                                vaccineId = appointment?.vaccineId ?: 0,
+                                pesel = appointment?.pesel ?: "",
+                                doctorName = doctor.name,
+                                doctorSurname = doctor.surname,
+                                date = appointment?.date ?: Date(java.util.Date().time),
+                                time = appointment?.time ?: Time(0),
+                                address = appointment?.address ?: "",
+                                dose = appointment?.dose ?: 0,
+                                vaccineName = vaccine.vaccineName
+                            )
+                            vaccinationList.add(vaccinationDetail)
+                        }
                     }
                 }
                 connection.close()
@@ -93,8 +98,22 @@ class HistoryActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun fetchVaccinationData() {
+        val firebaseUid = FirebaseAuth.getInstance().currentUser?.uid
+
         lifecycleScope.launch {
-            vaccinationList = fetchVaccinationDataFromDB()
+            var currentUserPesel: String? = null
+            if (firebaseUid != null) {
+                withContext(Dispatchers.IO) {
+                    val connection = DBconnection.getConnection()
+                    val patientsQuery = PatientsQueries(connection)
+                    currentUserPesel = patientsQuery.getPeselByUID(firebaseUid)
+                    connection.close()
+                }
+            }
+
+            if (currentUserPesel != null) {
+                vaccinationList = fetchVaccinationDataFromDB(currentUserPesel!!)
+            }
 
             vaccinationList.sortBy { it.date }
 
@@ -110,16 +129,9 @@ class HistoryActivity : AppCompatActivity() {
 
                 val result = appointmentQuery.updateAppointment(updatedAppointment.id ?: 0, updatedAppointment)
 
-                if (result) {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@HistoryActivity, "Appointment updated successfully", Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(this@HistoryActivity, "Failed to update appointment", Toast.LENGTH_SHORT).show()
-                    }
+                if (!result) {
+                    showCoroutineToast("Failed to update appointment")
                 }
-
                 connection.close()
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -134,8 +146,7 @@ class HistoryActivity : AppCompatActivity() {
                 val connection = DBconnection.getConnection()
                 val appointmentQuery = AppointmentsQueries(connection)
 
-                val result = appointmentQuery
-                    .deleteAppointment(vaccination.vaccineId)
+                val result = appointmentQuery.deleteAppointment(vaccination.id)
 
                 if (result) {
                     vaccinationList.remove(vaccination)
@@ -150,40 +161,6 @@ class HistoryActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
         }
-    }
-
-    fun showUpdateDialog(vaccination: VaccinationDetail) {
-        val dialog = Dialog(this)
-        dialog.setContentView(R.layout.dialog_update_appointment)
-
-        val etDate = dialog.findViewById<EditText>(R.id.etDate)
-        val etTime = dialog.findViewById<EditText>(R.id.etTime)
-        val etAddress = dialog.findViewById<EditText>(R.id.etAddress)
-        val btnUpdate = dialog.findViewById<Button>(R.id.btnUpdate)
-
-        btnUpdate.setOnClickListener {
-            val date = Date.valueOf(etDate.text.toString())
-            val time = Time.valueOf(etTime.text.toString())
-            val address = etAddress.text.toString()
-
-            val updatedAppointment = Appointments(
-                vaccineId = vaccination.vaccineId,
-                pesel = vaccination.pesel,
-                doctorId = 1, // TODO get doctor id
-                date = date,
-                time = time,
-                address = address,
-                dose = vaccination.dose
-            )
-
-            lifecycleScope.launch {
-                updateAppointment(updatedAppointment)
-            }
-
-            dialog.dismiss()
-        }
-
-        dialog.show()
     }
 
     private suspend fun showCoroutineToast(message: String) {

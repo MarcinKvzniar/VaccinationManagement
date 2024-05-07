@@ -4,6 +4,7 @@ import java.sql.Date
 import java.sql.Time
 
 data class VaccinationDetail(
+    val id: Int,
     val vaccineId: Int,
     val pesel: String,
     val doctorName: String,
