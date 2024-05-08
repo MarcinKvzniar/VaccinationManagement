@@ -18,6 +18,8 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var btnLogOut : Button
     private lateinit var btnNotifications: Button
     private lateinit var userNotificationService: UserNotificationService
+    private lateinit var btnAccount: Button
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +50,9 @@ class HomeActivity : AppCompatActivity() {
                 Intent(this@HomeActivity,
                 LoginActivity::class.java))
         }
+        btnAccount.setOnClickListener {
+            startActivity(Intent(this@HomeActivity, AccountActivity::class.java))
+        }
 
         btnNotifications.setOnClickListener {
            startActivity(
@@ -63,5 +68,6 @@ class HomeActivity : AppCompatActivity() {
         btnHistory = findViewById(R.id.btnHistory)
         btnLogOut = findViewById(R.id.btnLogOut)
         btnNotifications = findViewById(R.id.btnNotifications)
+        btnAccount = findViewById(R.id.btnAccount)
     }
 }
