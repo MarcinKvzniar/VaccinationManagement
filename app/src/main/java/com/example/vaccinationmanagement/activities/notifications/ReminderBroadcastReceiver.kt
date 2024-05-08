@@ -1,4 +1,4 @@
-package com.example.vaccinationmanagement.appointments
+package com.example.vaccinationmanagement.activities.notifications
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -15,12 +15,10 @@ when it receives a broadcast. It will used to remind the user of an upcoming app
 
 class ReminderBroadcastReceiver : BroadcastReceiver() {
 
-    @SuppressLint("MissingPermission")  //jesli nie beda pracowac reminders - przyczyna-rozwizanie: dodac w AndroidManifest.xml permission dla wysylania reminders
+    @SuppressLint("MissingPermission")
     override fun onReceive(context: Context, intent: Intent) {
         val appointmentId = intent.getIntExtra("appointment_id", -1)
         if (appointmentId != -1) {
-            // Fetch the appointment details from the database
-            // Show a notification to the user with the appointment details
             val builder = NotificationCompat.Builder(context, "reminder_channel")
                 .setSmallIcon(R.drawable.ic_reminder)
                 .setContentTitle("Appointment Reminder")
