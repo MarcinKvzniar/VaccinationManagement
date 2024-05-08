@@ -71,7 +71,9 @@ class NotificationActivity : AppCompatActivity() {
             if (selectedDate != null && selectedTime != null) {
                 lifecycleScope.launch {
                     // Save the selected date and time to the database
-                    saveNotification(selectedDate!!, selectedTime!!)
+
+                    // uid changed to pesel, we need to update this to work with new db structure
+//                    saveNotification(selectedDate!!, selectedTime!!)
                 }
             } else {
                 lifecycleScope.launch {
@@ -138,44 +140,44 @@ class NotificationActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun saveNotification(date: String, time: String) {
-        val vaccineName = vaccineNameEditText.text.toString().trim()
-        if (!checkIfVaccineExists(vaccineName)) {
-            showToast("Invalid vaccine name")
-            return
-        }
-        val vaccineId = getVaccineIdByVaccineName(vaccineName)
+//    private suspend fun saveNotification(date: String, time: String) {
+//        val vaccineName = vaccineNameEditText.text.toString().trim()
+//        if (!checkIfVaccineExists(vaccineName)) {
+//            showToast("Invalid vaccine name")
+//            return
+//        }
+//        val vaccineId = getVaccineIdByVaccineName(vaccineName)
+//
+//        val uid = FirebaseAuth.getInstance().currentUser?.uid
+//        insertNotificationIntoDB(vaccineId, uid!!, date, time)
+//        // Schedule the alarm
+//        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val intent = Intent(this, ReminderBroadcastReceiver::class.java)
+//        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+//
+//        // Parse the date and time of the appointment
+//        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+//        val appointmentDate = format.parse("$date $time")
+//
+//        // Schedule the alarm
+//        if (appointmentDate != null) {
+//            alarmManager.setExact(
+//                AlarmManager.RTC_WAKEUP,
+//                appointmentDate.time,
+//                pendingIntent
+//            )
+//        }
+//
+//    }
 
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
-        insertNotificationIntoDB(vaccineId, uid!!, date, time)
-        // Schedule the alarm
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, ReminderBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-        // Parse the date and time of the appointment
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-        val appointmentDate = format.parse("$date $time")
-
-        // Schedule the alarm
-        if (appointmentDate != null) {
-            alarmManager.setExact(
-                AlarmManager.RTC_WAKEUP,
-                appointmentDate.time,
-                pendingIntent
-            )
-        }
-
-    }
-
-    private suspend fun insertNotificationIntoDB(vaccineId: Int, uid: String, date: String, time: String) {
+    private suspend fun insertNotificationIntoDB(vaccineId: Int, pesel: String, date: String, time: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val connection = DBconnection.getConnection()
                 val notificationQuery = NotificationQueries(connection)
                 val newNotification = Notification(
                     vaccineId = vaccineId,
-                    uid = uid,
+                    pesel = pesel,
                     notificationDate = Date.valueOf(date),
                     notificationTime = Time.valueOf(time)
                 )

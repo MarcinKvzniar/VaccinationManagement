@@ -1,6 +1,8 @@
 package com.example.vaccinationmanagement.appointments
 
 import android.util.Log
+import com.example.vaccinationmanagement.activities.notifications.Notification
+import com.example.vaccinationmanagement.notifications.NotificationQueries
 import java.sql.Connection
 import java.sql.ResultSet
 
@@ -43,6 +45,21 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
         statement.setInt(7, appointment.dose)
         val result = !statement.execute()
         statement.close()
+
+        // If the appointment was inserted successfully, create a notification
+        if (result) {
+            val notificationQueries = NotificationQueries(connection)
+            val notification = Notification(
+                vaccineId = appointment.vaccineId,
+                pesel = appointment.pesel,
+                notificationDate = appointment.date,
+                notificationTime = appointment.time
+            )
+            val notificationResult = notificationQueries.insertNotification(notification)
+            if (!notificationResult) {
+                Log.d("AppointmentsQueries", "Failed to create notification for appointment with id: ${appointment.id}")
+            }
+        }
 
         return result
     }
