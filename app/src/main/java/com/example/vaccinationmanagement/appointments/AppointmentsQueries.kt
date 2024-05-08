@@ -1,5 +1,6 @@
 package com.example.vaccinationmanagement.appointments
 
+import android.util.Log
 import java.sql.Connection
 import java.sql.ResultSet
 
@@ -50,15 +51,31 @@ class AppointmentsQueries(private val connection: Connection) : AppointmentsDAO 
         val query = "{CALL updateAppointment(?, ?, ?, ?, ?, ?, ?, ?)}"
         val callableStatement = connection.prepareCall(query)
         callableStatement.setInt(1, id)
-        callableStatement.setInt(2, appointment.vaccineId)
+        callableStatement.setInt(2, appointment.vaccineId ?: 0)
         callableStatement.setString(3, appointment.pesel)
-        callableStatement.setInt(4, appointment.doctorId)
+        callableStatement.setInt(4, appointment.doctorId ?: 0)
         callableStatement.setDate(5, appointment.date)
         callableStatement.setTime(6, appointment.time)
         callableStatement.setString(7, appointment.address)
-        callableStatement.setInt(8, appointment.dose)
+        callableStatement.setInt(8, appointment.dose ?: 0)
 
-        return callableStatement.executeUpdate() > 0
+        val affectedRows = callableStatement.executeUpdate()
+        val result = affectedRows > 0
+        if (result) {
+            Log.d("AppointmentsQueries", "Appointment with id: $id updated successfully. Rows affected: $affectedRows")
+        } else {
+            Log.d("AppointmentsQueries", "Failed to update appointment with id: $id. Rows affected: $affectedRows")
+        }
+
+        var warnings = callableStatement.warnings
+        while (warnings != null) {
+            Log.w("AppointmentsQueries", "SQL Warning: ${warnings.message}")
+            warnings = warnings.nextWarning
+        }
+
+        callableStatement.close()
+
+        return result
     }
 
     override fun deleteAppointment(id: Int): Boolean {

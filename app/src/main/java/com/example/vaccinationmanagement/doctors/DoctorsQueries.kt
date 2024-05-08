@@ -2,6 +2,7 @@ package com.example.vaccinationmanagement.doctors
 
 import java.sql.Connection
 import java.sql.ResultSet
+import java.sql.Types
 
 class DoctorsQueries(private val connection: Connection) : DoctorsDAO {
     override fun getDoctorById(id: Int): Doctors? {
@@ -15,6 +16,17 @@ class DoctorsQueries(private val connection: Connection) : DoctorsDAO {
         } else {
             null
         }
+    }
+
+    override fun getDoctorId(name: String, surname: String): Int? {
+        val query = "{CALL getDoctorId(?, ?, ?)}"
+        val callableStatement = connection.prepareCall(query)
+        callableStatement.setString(1, name)
+        callableStatement.setString(2, surname)
+        callableStatement.registerOutParameter(3, Types.INTEGER)
+        callableStatement.execute()
+
+        return callableStatement.getInt(3)
     }
 
     override fun getAllDoctors(): Set<Doctors?>? {
