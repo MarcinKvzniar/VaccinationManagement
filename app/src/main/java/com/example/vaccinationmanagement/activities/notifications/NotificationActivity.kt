@@ -42,16 +42,17 @@ class NotificationActivity : AppCompatActivity() {
     private var selectedTime: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        /**
+         * This function is called when the activity is starting.
+         * It initializes the activity and its views.
+         */
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
-
-        // Initialize views
         setDateButton = findViewById(R.id.setDateButton)
         setTimeButton = findViewById(R.id.setTimeButton)
         btnSaveNotification = findViewById(R.id.scheduleNotificationButton)
         vaccineNameEditText = findViewById(R.id.etVaccineNameItem)
 
-        // Set click listeners
         setDateButton.setOnClickListener {
             showDatePickerDialog()
         }
@@ -71,7 +72,9 @@ class NotificationActivity : AppCompatActivity() {
             if (selectedDate != null && selectedTime != null) {
                 lifecycleScope.launch {
                     // Save the selected date and time to the database
-                    saveNotification(selectedDate!!, selectedTime!!)
+
+                    // uid changed to pesel, we need to update this to work with new db structure
+//                    saveNotification(selectedDate!!, selectedTime!!)
                 }
             } else {
                 lifecycleScope.launch {
@@ -83,6 +86,10 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     private fun showDatePickerDialog() {
+        /**
+         * This function shows a date picker dialog to the user.
+         * The user can select a date from this dialog.
+         */
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
@@ -106,6 +113,10 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     private fun showTimePickerDialog() {
+        /**
+         * This function shows a time picker dialog to the user.
+         * The user can select a time from this dialog.
+         */
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
@@ -138,44 +149,44 @@ class NotificationActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun saveNotification(date: String, time: String) {
-        val vaccineName = vaccineNameEditText.text.toString().trim()
-        if (!checkIfVaccineExists(vaccineName)) {
-            showToast("Invalid vaccine name")
-            return
-        }
-        val vaccineId = getVaccineIdByVaccineName(vaccineName)
+//    private suspend fun saveNotification(date: String, time: String) {
+//        val vaccineName = vaccineNameEditText.text.toString().trim()
+//        if (!checkIfVaccineExists(vaccineName)) {
+//            showToast("Invalid vaccine name")
+//            return
+//        }
+//        val vaccineId = getVaccineIdByVaccineName(vaccineName)
+//
+//        val uid = FirebaseAuth.getInstance().currentUser?.uid
+//        insertNotificationIntoDB(vaccineId, uid!!, date, time)
+//        // Schedule the alarm
+//        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+//        val intent = Intent(this, ReminderBroadcastReceiver::class.java)
+//        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+//
+//        // Parse the date and time of the appointment
+//        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+//        val appointmentDate = format.parse("$date $time")
+//
+//        // Schedule the alarm
+//        if (appointmentDate != null) {
+//            alarmManager.setExact(
+//                AlarmManager.RTC_WAKEUP,
+//                appointmentDate.time,
+//                pendingIntent
+//            )
+//        }
+//
+//    }
 
-        val uid = FirebaseAuth.getInstance().currentUser?.uid
-        insertNotificationIntoDB(vaccineId, uid!!, date, time)
-        // Schedule the alarm
-        val alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(this, ReminderBroadcastReceiver::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
-
-        // Parse the date and time of the appointment
-        val format = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
-        val appointmentDate = format.parse("$date $time")
-
-        // Schedule the alarm
-        if (appointmentDate != null) {
-            alarmManager.setExact(
-                AlarmManager.RTC_WAKEUP,
-                appointmentDate.time,
-                pendingIntent
-            )
-        }
-
-    }
-
-    private suspend fun insertNotificationIntoDB(vaccineId: Int, uid: String, date: String, time: String) {
+    private suspend fun insertNotificationIntoDB(vaccineId: Int, pesel: String, date: String, time: String) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val connection = DBconnection.getConnection()
                 val notificationQuery = NotificationQueries(connection)
                 val newNotification = Notification(
                     vaccineId = vaccineId,
-                    uid = uid,
+                    pesel = pesel,
                     notificationDate = Date.valueOf(date),
                     notificationTime = Time.valueOf(time)
                 )

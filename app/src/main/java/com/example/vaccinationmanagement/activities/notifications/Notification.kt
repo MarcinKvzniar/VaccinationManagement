@@ -4,8 +4,9 @@ import java.sql.Date
 import java.sql.Time
 
 data class Notification(
+    val notificationId: Int? = null,
     val vaccineId: Int,
-    val uid: String,
+    val pesel: String,
     val notificationDate: Date,
     val notificationTime: Time
 )

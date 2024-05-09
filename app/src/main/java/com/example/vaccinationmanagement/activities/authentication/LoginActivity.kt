@@ -36,6 +36,10 @@ class LoginActivity : AppCompatActivity() {
      * This is the first callback and called when this activity is first created.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
+        /**
+         * This function is called when the activity is starting.
+         * It initializes the activity and its views.
+         */
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
@@ -84,6 +88,11 @@ class LoginActivity : AppCompatActivity() {
      * @return Boolean indicating whether the login details are valid
      */
     private fun validateLoginDetails(): Boolean {
+        /**
+         * This function validates the login details entered by the user.
+         * It checks if the email and password fields are not empty.
+         * @return Boolean Returns true if the details are valid, else false.
+         */
         return when {
             TextUtils.isEmpty(inputEmailLog.text.toString().trim { it <= ' ' }) -> {
                 showBasicToast(getString(R.string.err_msg_enter_email))
@@ -101,6 +110,10 @@ class LoginActivity : AppCompatActivity() {
      * Log in the registered user
      */
     private fun logInRegisteredUser() {
+        /**
+         * This function logs in the registered user.
+         * It validates the login details and if they are valid, it logs in the user.
+         */
         if (validateLoginDetails()) {
             val email = inputEmailLog.text.toString().trim()
             val password = inputPasswordLog.text.toString().trim()
@@ -137,6 +150,9 @@ class LoginActivity : AppCompatActivity() {
      * Navigate to HomeActivity
      */
     private fun goToHomeActivity() {
+        /**
+         * This function navigates the user to the HomeActivity.
+         */
         val uid = FirebaseAuth.getInstance().currentUser?.uid
 
         val intent = Intent(this, HomeActivity::class.java)
@@ -149,6 +165,10 @@ class LoginActivity : AppCompatActivity() {
      * @param message The message to be displayed in the Toast
      */
     private fun showBasicToast(message: String) {
+        /**
+         * This function shows a basic toast message.
+         * @param message The message to be shown in the toast.
+         */
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
