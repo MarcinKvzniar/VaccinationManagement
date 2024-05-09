@@ -117,23 +117,40 @@
         app:layout_constraintTop_toBottomOf="@+id/btnGetTheDoctor"
         tools:ignore="HardcodedText" />
 
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnScheduleAppointment"
         android:layout_width="218dp"
         android:layout_height="63dp"
-        android:layout_marginStart="108dp"
         android:layout_marginTop="64dp"
         android:backgroundTint="#7C0047FA"
         android:gravity="center"
         android:text="Schedule Appointment"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/btnGetDose"
-        app:layout_constraintHorizontal_bias="0.818"
-        app:layout_constraintStart_toStartOf="@+id/btnGetDose"
-        app:layout_constraintTop_toBottomOf="@+id/btnGetDose"
-        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.88"
         tools:ignore="HardcodedText" />
+
+    <Button
+        android:id="@+id/btnBackButton"
+        android:layout_width="115dp"
+        android:layout_height="47dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/more_serious_design_button"
+        android:text="Back"
+        android:textColor="#000000"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/historyRecyclerView"
+        app:layout_constraintVertical_bias="0.695" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

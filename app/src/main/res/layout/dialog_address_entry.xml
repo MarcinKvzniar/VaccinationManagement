@@ -9,7 +9,7 @@
         android:layout_width="383dp"
         android:layout_height="53dp"
         android:background="@drawable/text_in_frame"
-        android:hint="Enter Address"
+        android:hint="    Enter Address"
         android:textColor="@color/black"
         android:textColorHint="@color/black" />
 
