@@ -14,9 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VaccinationManagement"
         tools:targetApi="34">
-        <activity
-            android:name=".activities.AccountActivity"
-            android:exported="false" />
+
         <activity
             android:name=".activities.notifications.NotificationActivity"
             android:exported="false" />

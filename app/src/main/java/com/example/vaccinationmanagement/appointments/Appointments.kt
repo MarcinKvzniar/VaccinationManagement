@@ -4,6 +4,7 @@ import com.example.vaccinationmanagement.activities.notifications.NotificationPr
 import java.sql.Time
 import java.sql.Date
 
+// Data class representing an appointment
 data class Appointments(
     var id: Int? = null,
     var vaccineId: Int,

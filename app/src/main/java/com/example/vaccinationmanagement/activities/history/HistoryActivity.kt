@@ -24,18 +24,29 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 
+/**
+ * HistoryActivity is an activity class that handles the display
+ * and management of vaccination history.
+ * It extends AppCompatActivity, which is a base class for activities
+ * that use the support library action bar features.
+ */
 class HistoryActivity : AppCompatActivity() {
 
+    // Declare UI elements
     private lateinit var historyAdapter: HistoryAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var btnBackHome: Button
     private var vaccinationList: MutableList<VaccinationDetail> = mutableListOf()
 
+    /**
+     * This is the first callback and called when this activity is first created.
+     */
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_history)
 
+        // Initialize views and set click listeners
         recyclerView = findViewById(R.id.historyRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
         historyAdapter = HistoryAdapter(vaccinationList)
@@ -51,9 +62,16 @@ class HistoryActivity : AppCompatActivity() {
             )
         }
 
+        // Fetch vaccination data from the database
         fetchVaccinationData()
     }
 
+    /**
+     * Fetch vaccination data from the database
+     * @param currentUserPesel The PESEL number of the current user
+     * @return A list of VaccinationDetail objects representing the
+     * vaccination history of the current user
+     */
     private suspend fun fetchVaccinationDataFromDB(currentUserPesel: String): MutableList<VaccinationDetail> {
         withContext(Dispatchers.IO) {
             try {
@@ -93,6 +111,9 @@ class HistoryActivity : AppCompatActivity() {
         return vaccinationList
     }
 
+    /**
+     * Fetch vaccination data from the database and update the RecyclerView
+     */
     @SuppressLint("NotifyDataSetChanged")
     private fun fetchVaccinationData() {
         val firebaseUid = FirebaseAuth.getInstance().currentUser?.uid
@@ -118,7 +139,10 @@ class HistoryActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Update an appointment in the database
+     * @param updatedAppointment The updated appointment
+     */
     @SuppressLint("NotifyDataSetChanged")
     suspend fun updateAppointment(updatedAppointment: Appointments) {
         withContext(Dispatchers.IO) {
@@ -163,6 +187,10 @@ class HistoryActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Delete an appointment from the database
+     * @param vaccination The vaccination detail to be deleted
+     */
     @SuppressLint("NotifyDataSetChanged")
     suspend fun deleteAppointment(vaccination: VaccinationDetail) {
         withContext(Dispatchers.IO) {
@@ -187,6 +215,10 @@ class HistoryActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Show a toast message
+     * @param message The message to be displayed in the toast
+     */
     private suspend fun showCoroutineToast(message: String) {
         withContext(Dispatchers.Main) {
             Toast.makeText(this@HistoryActivity, message, Toast.LENGTH_SHORT).show()
@@ -194,6 +226,11 @@ class HistoryActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Check if a date is valid
+     * @param date The date to be checked
+     * @return Boolean indicating whether the date is valid
+     */
     @SuppressLint("SimpleDateFormat")
     private fun isDateValid(date: String): Boolean {
         val format = SimpleDateFormat("yyyy-MM-dd")
@@ -206,6 +243,11 @@ class HistoryActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Check if a time is valid
+     * @param time The time to be checked
+     * @return Boolean indicating whether the time is valid
+     */
     @SuppressLint("SimpleDateFormat")
     private fun isTimeValid(time: String): Boolean {
         val format = SimpleDateFormat("HH:mm")

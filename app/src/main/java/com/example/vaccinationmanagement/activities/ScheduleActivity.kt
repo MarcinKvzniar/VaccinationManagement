@@ -36,6 +36,7 @@ import java.util.Calendar
  */
 class ScheduleActivity : AppCompatActivity() {
 
+    // Declare UI elements
     private lateinit var btnPickDate: Button
     private lateinit var btnPickTime: Button
     private lateinit var etVaccineName: EditText
@@ -49,10 +50,14 @@ class ScheduleActivity : AppCompatActivity() {
     private var dateString: String = ""
     private var timeString: String = ""
 
+    /**
+     * This is the first callback and called when this activity is first created.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule)
 
+        // Initialize views and set click listeners
         initViews()
 
         btnPickDate.setOnClickListener {
@@ -86,6 +91,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Initialize views
+     */
     private fun initViews() {
         btnPickDate = findViewById(R.id.btnDatePicker)
         btnPickTime = findViewById(R.id.btnTimePicker)
@@ -98,6 +106,9 @@ class ScheduleActivity : AppCompatActivity() {
         btnGetDose = findViewById(R.id.btnGetDose)
     }
 
+    /**
+     * Show a dialog for the user to pick a date
+     */
     private fun showDatePickerDialog() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_date_picker)
@@ -120,6 +131,9 @@ class ScheduleActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Show a dialog for the user to pick a time
+     */
     private fun showTimePickerDialog() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_time_picker)
@@ -143,6 +157,9 @@ class ScheduleActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Show a dialog for the user to enter an address
+     */
     private fun showAddressEntryDialog() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_address_entry)
@@ -160,6 +177,9 @@ class ScheduleActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Save the schedule to the database
+     */
     private suspend fun saveSchedule() {
         /**
          * This function saves the schedule created by the user.
@@ -192,8 +212,6 @@ class ScheduleActivity : AppCompatActivity() {
 
         insertAppointmentIntoDB(vaccineId, pesel, doctorId, date, time, address, dose)
     }
-
-
 
     /**
      * This function inserts an appointment into the database.
@@ -240,6 +258,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Get the vaccine ID by the vaccine name
+     */
     private suspend fun getVaccineIdByVaccineName(vaccineName: String): Int {
         /**
          * This function retrieves the ID of a vaccine by its name.
@@ -260,6 +281,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Get the patient's PESEL number by their user ID
+     */
     private suspend fun getPatientPesel(uid: String?): String {
         /**
          * This function retrieves the PESEL number of a patient by their UID.
@@ -280,6 +304,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Check if a vaccine exists in the database
+     */
     private suspend fun checkIfVaccineExists(vaccineName: String): Boolean {
         /**
          * This function checks if a vaccine exists in the database.
@@ -301,6 +328,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Get the available doctors from the database
+     */
     private suspend fun getAvailableDoctors(): Int {
         /**
          * This function retrieves the ID of an available doctor.
@@ -337,6 +367,9 @@ class ScheduleActivity : AppCompatActivity() {
         return doctorId
     }
 
+    /**
+     * Get the dose number for the vaccine
+     */
     private suspend fun getDose(): Int {
         /**
          * This function retrieves the dose number of a vaccine.
@@ -366,6 +399,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Check if a date string is valid
+     */
     @SuppressLint("SimpleDateFormat")
     /**
      * This function checks if a date is valid.
@@ -383,6 +419,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Check if a time string is valid
+     */
     @SuppressLint("SimpleDateFormat")
     /**
      * This function checks if a time is valid.
@@ -400,6 +439,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Show a toast message
+     */
    private suspend fun showToast(message: String) {
         withContext(Dispatchers.Main) {
             Toast.makeText(this@ScheduleActivity, message, Toast.LENGTH_SHORT).show()

@@ -27,21 +27,6 @@
         tools:ignore="HardcodedText" />
 
     <Button
-        android:id="@+id/btnAccount"
-        android:layout_width="200dp"
-        android:layout_height="75dp"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:background="@drawable/bg_input"
-        android:drawableLeft="@drawable/ic_person"
-        android:text="ACCOUNT"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/textView"
-        app:layout_constraintStart_toStartOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
-        tools:ignore="HardcodedText,RtlHardcoded" />
-
-    <Button
         android:id="@+id/btnSchedule"
         android:layout_width="200dp"
         android:layout_height="75dp"
@@ -51,9 +36,9 @@
         android:drawableLeft="@drawable/ic_history"
         android:text="SCHEDULE"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/btnAccount"
-        app:layout_constraintStart_toStartOf="@+id/btnAccount"
-        app:layout_constraintTop_toBottomOf="@+id/btnAccount"
+        app:layout_constraintEnd_toEndOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
         tools:ignore="HardcodedText,RtlHardcoded" />
 
     <Button
@@ -73,15 +58,14 @@
 
     <Button
         android:id="@+id/btnNotifications"
-        android:layout_width="232dp"
-        android:layout_height="70dp"
+        android:layout_width="200dp"
+        android:layout_height="75dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/bg_input"
         android:drawableLeft="@drawable/ic_notification"
         android:gravity="center"
         android:text="NOTIFICATIONS"
-        android:textSize="18sp"
-
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/btnHistory"
         app:layout_constraintStart_toStartOf="@id/btnHistory"
         app:layout_constraintTop_toBottomOf="@+id/btnHistory"

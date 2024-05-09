@@ -1,5 +1,6 @@
 package com.example.vaccinationmanagement.patients
 
+// Interface defining operations to access patients data (DAO - Data Access Object)
 interface PatientsDAO {
     fun getPatientByPesel(pesel: String): Patients?
 
