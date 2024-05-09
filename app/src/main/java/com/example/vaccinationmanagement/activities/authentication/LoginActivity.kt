@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 /**
  * LoginActivity is an activity class that handles user login.
  * It extends AppCompatActivity, which is a base class for activities
- * shthat use the support library action bar features.
+ * that use the support library action bar features.
  */
 class LoginActivity : AppCompatActivity() {
 

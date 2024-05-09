@@ -1,5 +1,6 @@
 package com.example.vaccinationmanagement.doctors
 
+// Interface defining operations to access doctors data (DAO - Data Access Object)
 interface DoctorsDAO {
     fun getDoctorById(id: Int): Doctors?
 

@@ -2,6 +2,7 @@ package com.example.vaccinationmanagement.vaccines
 
 import com.example.vaccinationmanagement.patients.Patients
 
+// Interface defining operations to access vaccines data (DAO - Data Access Object)
 interface VaccinesDAO {
     fun getVaccineById(id: Int): Vaccines?
 

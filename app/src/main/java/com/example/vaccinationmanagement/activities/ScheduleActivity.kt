@@ -29,8 +29,13 @@ import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
+/**
+ * ScheduleActivity is an activity class that handles the scheduling of vaccinations.
+ * It extends AppCompatActivity, which is a base class for activities that use the support library action bar features.
+ */
 class ScheduleActivity : AppCompatActivity() {
 
+    // Declare UI elements
     private lateinit var btnPickDate: Button
     private lateinit var btnPickTime: Button
     private lateinit var etVaccineName: EditText
@@ -44,10 +49,14 @@ class ScheduleActivity : AppCompatActivity() {
     private var dateString: String = ""
     private var timeString: String = ""
 
+    /**
+     * This is the first callback and called when this activity is first created.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule)
 
+        // Initialize views and set click listeners
         initViews()
 
         btnPickDate.setOnClickListener {
@@ -81,6 +90,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Initialize views
+     */
     private fun initViews() {
         btnPickDate = findViewById(R.id.btnDatePicker)
         btnPickTime = findViewById(R.id.btnTimePicker)
@@ -93,6 +105,9 @@ class ScheduleActivity : AppCompatActivity() {
         btnGetDose = findViewById(R.id.btnGetDose)
     }
 
+    /**
+     * Show a dialog for the user to pick a date
+     */
     private fun showDatePickerDialog() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_date_picker)
@@ -115,6 +130,9 @@ class ScheduleActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Show a dialog for the user to pick a time
+     */
     private fun showTimePickerDialog() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_time_picker)
@@ -138,6 +156,9 @@ class ScheduleActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Show a dialog for the user to enter an address
+     */
     private fun showAddressEntryDialog() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_address_entry)
@@ -155,6 +176,9 @@ class ScheduleActivity : AppCompatActivity() {
         dialog.show()
     }
 
+    /**
+     * Save the schedule to the database
+     */
     private suspend fun saveSchedule() {
         val vaccineName = etVaccineName.text.toString().trim()
         if (!checkIfVaccineExists(vaccineName)) {
@@ -184,6 +208,9 @@ class ScheduleActivity : AppCompatActivity() {
         insertAppointmentIntoDB(vaccineId, pesel, doctorId, date, time, address, dose)
     }
 
+    /**
+     * Insert the appointment into the database
+     */
     private fun insertAppointmentIntoDB(vaccineId: Int, pesel: String, doctorId: Int, date: Date, time: Time, address: String, dose: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -219,6 +246,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Get the vaccine ID by the vaccine name
+     */
     private suspend fun getVaccineIdByVaccineName(vaccineName: String): Int {
         return withContext(Dispatchers.IO) {
             var vaccineId = 0
@@ -234,6 +264,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Get the patient's PESEL number by their user ID
+     */
     private suspend fun getPatientPesel(uid: String?): String {
         return withContext(Dispatchers.IO) {
             var pesel = ""
@@ -249,6 +282,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Check if a vaccine exists in the database
+     */
     private suspend fun checkIfVaccineExists(vaccineName: String): Boolean {
         return withContext(Dispatchers.IO) {
             var exists = false
@@ -265,6 +301,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Get the available doctors from the database
+     */
     private suspend fun getAvailableDoctors(): Int {
         var doctorId = 0
         var doctorName: String? = null
@@ -297,6 +336,9 @@ class ScheduleActivity : AppCompatActivity() {
         return doctorId
     }
 
+    /**
+     * Get the dose number for the vaccine
+     */
     private suspend fun getDose(): Int {
         return withContext(Dispatchers.IO) {
             val vaccineName = etVaccineName.text.toString()
@@ -322,6 +364,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Check if a date string is valid
+     */
     @SuppressLint("SimpleDateFormat")
     private fun isDateValid(date: String): Boolean {
         val format = SimpleDateFormat("yyyy-MM-dd")
@@ -334,6 +379,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Check if a time string is valid
+     */
     @SuppressLint("SimpleDateFormat")
     private fun isTimeValid(time: String): Boolean {
         val format = SimpleDateFormat("HH:mm")
@@ -346,6 +394,9 @@ class ScheduleActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Show a toast message
+     */
    private suspend fun showToast(message: String) {
         withContext(Dispatchers.Main) {
             Toast.makeText(this@ScheduleActivity, message, Toast.LENGTH_SHORT).show()

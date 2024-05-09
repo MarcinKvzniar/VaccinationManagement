@@ -1,13 +1,11 @@
 package com.example.vaccinationmanagement.activities.history
 
 import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -26,10 +24,18 @@ import java.sql.Date
 import java.sql.Time
 import java.text.SimpleDateFormat
 
+/**
+ * HistoryAdapter is a RecyclerView.Adapter subclass that displays a list of vaccination history details.
+ * @property vaccinationHistory The list of vaccination history details to be displayed.
+ */
 class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>) : RecyclerView.Adapter<HistoryAdapter.ViewHolder>() {
 
-    private val TEXTSIZE = 14f
+    private val textSize = 14f
 
+    /**
+     * ViewHolder is a RecyclerView.ViewHolder subclass that represents a single item in the list.
+     * @property itemView The root view of the ViewHolder.
+     */
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textVaccineName: TextView = itemView.findViewById(R.id.tvVaccineNameItem)
         val textDate: TextView = itemView.findViewById(R.id.tvDateItem)
@@ -41,12 +47,23 @@ class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>) : 
         val btnDelete: Button = itemView.findViewById(R.id.btnDelete)
     }
 
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type to represent an item.
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_history, parent, false)
         return ViewHolder(view)
     }
 
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val vaccination = vaccinationHistory[position]
@@ -66,7 +83,7 @@ class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>) : 
                 if (currentTime - lastTouchDown < ViewConfiguration.getDoubleTapTimeout()) {
                     val editText = EditText(v.context)
                     editText.setText((v as TextView).text)
-                    editText.textSize = TEXTSIZE
+                    editText.textSize = textSize
                     editText.layoutParams = v.layoutParams
                     (v.parent as ViewGroup).addView(editText)
                     v.visibility = View.GONE
@@ -95,7 +112,7 @@ class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>) : 
                 if (currentTime - lastTouchDown < ViewConfiguration.getDoubleTapTimeout()) {
                     val editText = EditText(v.context)
                     editText.setText((v as TextView).text)
-                    editText.textSize = TEXTSIZE
+                    editText.textSize = textSize
                     editText.layoutParams = v.layoutParams
                     (v.parent as ViewGroup).addView(editText)
                     v.visibility = View.GONE
@@ -124,7 +141,7 @@ class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>) : 
                 if (currentTime - lastTouchDown < ViewConfiguration.getDoubleTapTimeout()) {
                     val editText = EditText(v.context)
                     editText.setText((v as TextView).text)
-                    editText.textSize = TEXTSIZE
+                    editText.textSize = textSize
                     editText.layoutParams = v.layoutParams
                     (v.parent as ViewGroup).addView(editText)
                     v.visibility = View.GONE
@@ -189,10 +206,19 @@ class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>) : 
         }
     }
 
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     * @return The total number of items in this adapter.
+     */
     override fun getItemCount(): Int {
         return vaccinationHistory.size
     }
 
+    /**
+     * Checks if a date string is valid.
+     * @param date The date string to be checked.
+     * @return Boolean indicating whether the date string is valid.
+     */
     @SuppressLint("SimpleDateFormat")
     private fun isDateValid(date: String): Boolean {
         val format = SimpleDateFormat("yyyy-MM-dd")
@@ -205,6 +231,11 @@ class HistoryAdapter(private val vaccinationHistory: List<VaccinationDetail>) : 
         }
     }
 
+    /**
+     * Checks if a time string is valid.
+     * @param time The time string to be checked.
+     * @return Boolean indicating whether the time string is valid.
+     */
     @SuppressLint("SimpleDateFormat")
     private fun isTimeValid(time: String): Boolean {
         val format = SimpleDateFormat("HH:mm")

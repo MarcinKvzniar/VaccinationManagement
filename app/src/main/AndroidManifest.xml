@@ -14,15 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.VaccinationManagement"
         tools:targetApi="34">
-        <activity
-            android:name=".activities.AccountActivity"
-            android:exported="false" />
-<<<<<<< HEAD
-=======
+
         <activity
             android:name=".activities.notifications.NotificationActivity"
             android:exported="false" />
->>>>>>> 881b3898884a6d7e84fe74ce6dc700daf52a62fb
         <activity
             android:name=".activities.history.HistoryAdapter"
             android:exported="false" />
