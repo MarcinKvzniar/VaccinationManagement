@@ -19,6 +19,11 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 
 class LoginActivity : AppCompatActivity() {
 
+    /*
+     * LoginActivity is an activity that provides the user with a login interface.
+     * It validates the user's input and logs in the user if the input is valid.
+     */
+
     private lateinit var btnLogin: Button
     private lateinit var btnGoToRegister: TextView
 
@@ -28,7 +33,12 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var showPassword: CheckBox
     private lateinit var firebaseAuth: FirebaseAuth
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+        /**
+         * This function is called when the activity is starting.
+         * It initializes the activity and its views.
+         */
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
@@ -53,6 +63,7 @@ class LoginActivity : AppCompatActivity() {
 
         showPassword = findViewById(R.id.showPassword)
 
+        // Show/hide password
         showPassword.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 inputPasswordLog
@@ -68,6 +79,11 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun validateLoginDetails(): Boolean {
+        /**
+         * This function validates the login details entered by the user.
+         * It checks if the email and password fields are not empty.
+         * @return Boolean Returns true if the details are valid, else false.
+         */
         return when {
             TextUtils.isEmpty(inputEmailLog.text.toString().trim { it <= ' ' }) -> {
                 showBasicToast(getString(R.string.err_msg_enter_email))
@@ -82,6 +98,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun logInRegisteredUser() {
+        /**
+         * This function logs in the registered user.
+         * It validates the login details and if they are valid, it logs in the user.
+         */
         if (validateLoginDetails()) {
             val email = inputEmailLog.text.toString().trim()
             val password = inputPasswordLog.text.toString().trim()
@@ -113,6 +133,9 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goToHomeActivity() {
+        /**
+         * This function navigates the user to the HomeActivity.
+         */
         val uid = FirebaseAuth.getInstance().currentUser?.uid
 
         val intent = Intent(this, HomeActivity::class.java)
@@ -121,6 +144,10 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showBasicToast(message: String) {
+        /**
+         * This function shows a basic toast message.
+         * @param message The message to be shown in the toast.
+         */
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 

@@ -42,16 +42,17 @@ class NotificationActivity : AppCompatActivity() {
     private var selectedTime: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        /**
+         * This function is called when the activity is starting.
+         * It initializes the activity and its views.
+         */
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
-
-        // Initialize views
         setDateButton = findViewById(R.id.setDateButton)
         setTimeButton = findViewById(R.id.setTimeButton)
         btnSaveNotification = findViewById(R.id.scheduleNotificationButton)
         vaccineNameEditText = findViewById(R.id.etVaccineNameItem)
 
-        // Set click listeners
         setDateButton.setOnClickListener {
             showDatePickerDialog()
         }
@@ -85,6 +86,10 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     private fun showDatePickerDialog() {
+        /**
+         * This function shows a date picker dialog to the user.
+         * The user can select a date from this dialog.
+         */
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)
@@ -108,6 +113,10 @@ class NotificationActivity : AppCompatActivity() {
     }
 
     private fun showTimePickerDialog() {
+        /**
+         * This function shows a time picker dialog to the user.
+         * The user can select a time from this dialog.
+         */
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)

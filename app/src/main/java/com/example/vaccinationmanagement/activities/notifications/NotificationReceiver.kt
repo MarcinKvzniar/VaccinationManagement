@@ -10,8 +10,6 @@ class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         val appointmentId = intent.getIntExtra("appointment_id", -1)
         if (appointmentId != -1) {
-            // TODO: Handle the notification here
-            //  create a new notification and display it to the user
         }
     }
 }

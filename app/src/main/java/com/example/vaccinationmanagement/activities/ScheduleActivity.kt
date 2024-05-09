@@ -29,6 +29,11 @@ import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
+/**
+ * ScheduleActivity is an activity that allows the user to schedule an appointment.
+ * It provides an interface for the user to select a date, time, and address for the appointment.
+ * The selected date, time, and address are then saved to the database.
+ */
 class ScheduleActivity : AppCompatActivity() {
 
     private lateinit var btnPickDate: Button
@@ -156,6 +161,10 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private suspend fun saveSchedule() {
+        /**
+         * This function saves the schedule created by the user.
+         * It validates the entered details and if they are valid, it saves the schedule to the database.
+         */
         val vaccineName = etVaccineName.text.toString().trim()
         if (!checkIfVaccineExists(vaccineName)) {
             showToast("Invalid vaccine name")
@@ -184,6 +193,18 @@ class ScheduleActivity : AppCompatActivity() {
         insertAppointmentIntoDB(vaccineId, pesel, doctorId, date, time, address, dose)
     }
 
+
+
+    /**
+     * This function inserts an appointment into the database.
+     * @param vaccineId The ID of the vaccine for the appointment.
+     * @param pesel The PESEL number of the user.
+     * @param doctorId The ID of the doctor for the appointment.
+     * @param date The date of the appointment.
+     * @param time The time of the appointment.
+     * @param address The address of the appointment.
+     * @param dose The dose number of the vaccine.
+     */
     private fun insertAppointmentIntoDB(vaccineId: Int, pesel: String, doctorId: Int, date: Date, time: Time, address: String, dose: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
             try {
@@ -220,6 +241,11 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private suspend fun getVaccineIdByVaccineName(vaccineName: String): Int {
+        /**
+         * This function retrieves the ID of a vaccine by its name.
+         * @param vaccineName The name of the vaccine.
+         * @return Int The ID of the vaccine.
+         */
         return withContext(Dispatchers.IO) {
             var vaccineId = 0
             try {
@@ -235,6 +261,11 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private suspend fun getPatientPesel(uid: String?): String {
+        /**
+         * This function retrieves the PESEL number of a patient by their UID.
+         * @param uid The UID of the patient.
+         * @return String The PESEL number of the patient.
+         */
         return withContext(Dispatchers.IO) {
             var pesel = ""
             try {
@@ -250,6 +281,11 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private suspend fun checkIfVaccineExists(vaccineName: String): Boolean {
+        /**
+         * This function checks if a vaccine exists in the database.
+         * @param vaccineName The name of the vaccine to check.
+         * @return Boolean Returns true if the vaccine exists, else false.
+         */
         return withContext(Dispatchers.IO) {
             var exists = false
             try {
@@ -266,6 +302,10 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private suspend fun getAvailableDoctors(): Int {
+        /**
+         * This function retrieves the ID of an available doctor.
+         * @return Int The ID of the doctor.
+         */
         var doctorId = 0
         var doctorName: String? = null
         var doctorSurname: String? = null
@@ -298,6 +338,10 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     private suspend fun getDose(): Int {
+        /**
+         * This function retrieves the dose number of a vaccine.
+         * @return Int The dose number of the vaccine.
+         */
         return withContext(Dispatchers.IO) {
             val vaccineName = etVaccineName.text.toString()
             var doseNumber = 0
@@ -323,6 +367,11 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SimpleDateFormat")
+    /**
+     * This function checks if a date is valid.
+     * @param date The date to check.
+     * @return Boolean Returns true if the date is valid, else false.
+     */
     private fun isDateValid(date: String): Boolean {
         val format = SimpleDateFormat("yyyy-MM-dd")
         format.isLenient = false
@@ -335,6 +384,11 @@ class ScheduleActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SimpleDateFormat")
+    /**
+     * This function checks if a time is valid.
+     * @param time The time to check.
+     * @return Boolean Returns true if the time is valid, else false.
+     */
     private fun isTimeValid(time: String): Boolean {
         val format = SimpleDateFormat("HH:mm")
         format.isLenient = false
