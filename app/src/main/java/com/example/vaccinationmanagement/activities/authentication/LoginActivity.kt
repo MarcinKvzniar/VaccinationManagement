@@ -17,42 +17,54 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 
+/**
+ * LoginActivity is an activity class that handles user login.
+ * It extends AppCompatActivity, which is a base class for activities
+ * shthat use the support library action bar features.
+ */
 class LoginActivity : AppCompatActivity() {
 
+    // Declare UI elements and Firebase authentication instance
     private lateinit var btnLogin: Button
     private lateinit var btnGoToRegister: TextView
-
     private lateinit var inputEmailLog: EditText
     private lateinit var inputPasswordLog: EditText
-
     private lateinit var showPassword: CheckBox
     private lateinit var firebaseAuth: FirebaseAuth
 
+    /**
+     * This is the first callback and called when this activity is first created.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        // Initialize views and set click listeners
         initViews()
 
+        // Navigate to RegisterActivity when register button is clicked
         btnGoToRegister.setOnClickListener {
             startActivity(Intent(this@LoginActivity,
                 RegisterActivity::class.java))
         }
 
+        // Attempt to log in the user when login button is clicked
         btnLogin.setOnClickListener {
             logInRegisteredUser()
         }
     }
 
+    /**
+     * Initialize views and Firebase authentication instance
+     */
     private fun initViews() {
         btnLogin = findViewById(R.id.btnLogin)
         btnGoToRegister = findViewById(R.id.btnGoToRegister)
-
         inputEmailLog = findViewById(R.id.inputEmailLog)
         inputPasswordLog = findViewById(R.id.inputPasswordLog)
-
         showPassword = findViewById(R.id.showPassword)
 
+        // Set an OnCheckedChangeListener on the showPassword checkbox to toggle password visibility
         showPassword.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 inputPasswordLog
@@ -63,10 +75,14 @@ class LoginActivity : AppCompatActivity() {
             }
         }
 
+        // Initialize Firebase authentication instance
         firebaseAuth = FirebaseAuth.getInstance()
-
     }
 
+    /**
+     * Validate login details
+     * @return Boolean indicating whether the login details are valid
+     */
     private fun validateLoginDetails(): Boolean {
         return when {
             TextUtils.isEmpty(inputEmailLog.text.toString().trim { it <= ' ' }) -> {
@@ -81,11 +97,15 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Log in the registered user
+     */
     private fun logInRegisteredUser() {
         if (validateLoginDetails()) {
             val email = inputEmailLog.text.toString().trim()
             val password = inputPasswordLog.text.toString().trim()
 
+            // Attempt to sign in with the provided email and password
             FirebaseAuth
                 .getInstance()
                 .signInWithEmailAndPassword(email, password)
@@ -95,6 +115,7 @@ class LoginActivity : AppCompatActivity() {
                         goToHomeActivity()
                         finish()
                     } else {
+                        // Handle possible exceptions during the sign-in process
                         val errorMessage = when (task.exception) {
                             is FirebaseAuthInvalidUserException -> {
                                 getString(R.string.err_msg_user_not_found)
@@ -112,6 +133,9 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Navigate to HomeActivity
+     */
     private fun goToHomeActivity() {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -120,8 +144,11 @@ class LoginActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    /**
+     * Show a basic Toast message
+     * @param message The message to be displayed in the Toast
+     */
     private fun showBasicToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
 }
